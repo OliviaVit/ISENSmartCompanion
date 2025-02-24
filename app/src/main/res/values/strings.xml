@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ISENSmartCompanion</string>
+    <string name="logo_isen">Logo ISEN</string>
+    <string name="send_button">Send button</string>
+    <string name="home">Home</string>
+    <string name="events">Events</string>
+    <string name="history">History</string>
 </resources>
