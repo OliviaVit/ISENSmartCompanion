@@ -37,6 +37,7 @@ import fr.isen.vittenet.isensmartcompanion.R
 fun MainScreen(innerPadding: PaddingValues) {
     val context = LocalContext.current
     var userInput = remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxWidth()
             .padding(innerPadding),
