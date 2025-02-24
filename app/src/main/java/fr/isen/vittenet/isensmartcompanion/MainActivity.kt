@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
+import fr.isen.vittenet.isensmartcompanion.screens.EventsScreen
 import fr.isen.vittenet.isensmartcompanion.screens.MainScreen
 import fr.isen.vittenet.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                 MainScreen(innerPadding)
                             }
                             composable(eventsTab.title) {
-                                Text(eventsTab.title)
+                                EventsScreen()
                             }
                             composable(historyTab.title) {
                                 Text(historyTab.title)
