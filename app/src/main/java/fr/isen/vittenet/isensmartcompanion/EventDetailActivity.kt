@@ -35,7 +35,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.isen.vittenet.isensmartcompanion.screens.Event
 import fr.isen.vittenet.isensmartcompanion.screens.ui.theme.ISENSmartCompanionTheme
 
 class EventDetailActivity : ComponentActivity() {
