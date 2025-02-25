@@ -35,6 +35,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.isen.vittenet.isensmartcompanion.models.EventModel
 import fr.isen.vittenet.isensmartcompanion.screens.ui.theme.ISENSmartCompanionTheme
 
 class EventDetailActivity : ComponentActivity() {
@@ -43,16 +44,20 @@ class EventDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val title = intent.getStringExtra("title") ?: "Titre non défini"
+            /*val title = intent.getStringExtra("title") ?: "Titre non défini"
             val description = intent.getStringExtra("description") ?: "Description non définie"
             val date = intent.getStringExtra("date") ?: "date non définie"
             val location = intent.getStringExtra("location") ?: "location non définie"
             val category = intent.getStringExtra("category") ?: "category non définie"
+            */
+            val event = intent.getSerializableExtra("event") as? EventModel
 
             ISENSmartCompanionTheme {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    EventDetail(title = title, description = description,date = date,location=location, category = category, modifier = Modifier.padding(innerPadding))
+                    if (event != null) {
+                        EventDetail(title= event.title,description = event.description, date= event.date, location = event.location, category = event.category, modifier =Modifier.padding(innerPadding) )
+                    }
                 }
             }
         }

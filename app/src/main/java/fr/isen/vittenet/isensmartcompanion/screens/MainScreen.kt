@@ -1,5 +1,6 @@
 package fr.isen.vittenet.isensmartcompanion.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
@@ -21,8 +24,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,12 +44,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.GenerateContentResponse
+import com.google.ai.client.generativeai.type.asTextOrNull
 import fr.isen.vittenet.isensmartcompanion.R
-
+import fr.isen.vittenet.isensmartcompanion.models.EventModel
+import kotlinx.coroutines.*
+import fr.isen.vittenet.isensmartcompanion.models.ResponseModel
 @Composable
 fun MainScreen(innerPadding: PaddingValues) {
+    val coroutineScope = rememberCoroutineScope()
+
     val context = LocalContext.current
-    var userInput = remember { mutableStateOf("") }
+    var userInput = remember { mutableStateOf<String>("") }
+    var geminiOutput = remember { mutableStateOf("") }
+
+    val responses = remember { mutableStateListOf<ResponseModel>() }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -66,6 +84,21 @@ fun MainScreen(innerPadding: PaddingValues) {
             .fillMaxSize()
             .weight(0.5F)
         )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(16.dp)
+        ) {
+            items(items = responses) { response ->
+                Text(
+                    text = response.answer,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
+
+
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -93,7 +126,24 @@ fun MainScreen(innerPadding: PaddingValues) {
                 modifier = Modifier.weight(1F)
             )
             IconButton(onClick = {
-                Toast.makeText(context,"user input : ${userInput.value}", Toast.LENGTH_LONG).show()
+
+                coroutineScope.launch {
+                    try {
+                        /*var response = generateResponse(userInput.value)
+                        Toast.makeText(context, " ${response}", Toast.LENGTH_LONG).show()
+                        geminiOutput.value = response*/
+
+                        val responseText = generateResponse(userInput.value)
+                        // Affiche un Toast pour le debug
+                        Toast.makeText(context, " $responseText", Toast.LENGTH_LONG).show()
+                        // Ajoute la réponse à la liste
+                        responses.add(ResponseModel(responseText))
+                        // Réinitialise le champ utilisateur
+                        userInput.value = ""
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
             },
                 modifier = Modifier
                     .background(colorResource(id = R.color.red), shape = CircleShape)
@@ -108,9 +158,21 @@ fun MainScreen(innerPadding: PaddingValues) {
 
                     )
                 },
-
-                )
+            )
         }
-
     }
+}
+
+
+suspend fun generateResponse(input: String): String {
+
+    val generativeModel = GenerativeModel(
+        modelName = "gemini-1.5-pro-latest",
+        apiKey = "AIzaSyAY3Vesc4xrW4WKU388g9KGkCxy05s-cps"
+    )
+
+    val response = generativeModel.generateContent(input)
+
+    return response.candidates.first().content.parts.map { it.asTextOrNull() }.joinToString("\n")
+
 }
