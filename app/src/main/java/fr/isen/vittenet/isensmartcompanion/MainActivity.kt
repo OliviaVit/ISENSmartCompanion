@@ -27,8 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
 import fr.isen.vittenet.isensmartcompanion.screens.EventsScreen
+import fr.isen.vittenet.isensmartcompanion.screens.HistoryScreen
 import fr.isen.vittenet.isensmartcompanion.screens.MainScreen
 import fr.isen.vittenet.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 
@@ -52,8 +55,10 @@ class MainActivity : ComponentActivity() {
             val historyTab = NavBarItem(title = ContextCompat.getString(context, R.string.history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
 
             val navBarItems = listOf(homeTab, eventsTab, historyTab)
-
             val navController = rememberNavController()
+
+            val db = AppDatabase.getDatabase(context) // Utilisation du Singleton
+
 
             ISENSmartCompanionTheme {
                 Scaffold(
@@ -62,13 +67,13 @@ class MainActivity : ComponentActivity() {
                     Box(Modifier.padding(innerPadding)) {
                         NavHost(navController = navController, startDestination = homeTab.title) {
                             composable(homeTab.title) {
-                                MainScreen(innerPadding)
+                                MainScreen(innerPadding,db)
                             }
                             composable(eventsTab.title) {
                                 EventsScreen()
                             }
                             composable(historyTab.title) {
-                                Text(historyTab.title)
+                                HistoryScreen(innerPadding,db)
                             }
                         }
 
@@ -79,10 +84,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ISENSmartCompanionTheme {
-        MainScreen(PaddingValues(8.dp))
-    }
-}

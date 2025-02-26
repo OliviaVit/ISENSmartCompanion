@@ -44,22 +44,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
+import androidx.room.Room
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.GenerateContentResponse
 import com.google.ai.client.generativeai.type.asTextOrNull
 import fr.isen.vittenet.isensmartcompanion.R
-import fr.isen.vittenet.isensmartcompanion.models.EventModel
+import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
+import fr.isen.vittenet.isensmartcompanion.models.ChatModel
 import kotlinx.coroutines.*
-import fr.isen.vittenet.isensmartcompanion.models.ResponseModel
+
 @Composable
-fun MainScreen(innerPadding: PaddingValues) {
+fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
     var userInput = remember { mutableStateOf<String>("") }
-    var geminiOutput = remember { mutableStateOf("") }
 
-    val responses = remember { mutableStateListOf<ResponseModel>() }
+    val responses = remember { mutableStateListOf<String>() }
+    val chatDao = db.chatDao()
+
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -92,7 +95,7 @@ fun MainScreen(innerPadding: PaddingValues) {
         ) {
             items(items = responses) { response ->
                 Text(
-                    text = response.answer,
+                    text = response,
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -129,17 +132,12 @@ fun MainScreen(innerPadding: PaddingValues) {
 
                 coroutineScope.launch {
                     try {
-                        /*var response = generateResponse(userInput.value)
-                        Toast.makeText(context, " ${response}", Toast.LENGTH_LONG).show()
-                        geminiOutput.value = response*/
-
                         val responseText = generateResponse(userInput.value)
-                        // Affiche un Toast pour le debug
-                        Toast.makeText(context, " $responseText", Toast.LENGTH_LONG).show()
-                        // Ajoute la réponse à la liste
-                        responses.add(ResponseModel(responseText))
-                        // Réinitialise le champ utilisateur
+                        Toast.makeText(context, "Send", Toast.LENGTH_LONG).show()
+                        responses.add(responseText)
+                        chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
                         userInput.value = ""
+
                     } catch (e: Exception) {
                         Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                     }
