@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -66,54 +68,61 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
 
 
     Column(
-        modifier = Modifier.fillMaxWidth()
-            .padding(innerPadding)
-            .background(colorResource(id = R.color.grey_background)),
-        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo_isen),
-            context.getString(R.string.logo_isen),
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(top = 50.dp)
-                .size(width = 300.dp, height = 100.dp)
-        )
-        Text(
-            text = getString(context, R.string.app_name),
-            fontSize = 25.sp,
-            modifier = Modifier.padding(top = 10.dp)
-        )
-        Text("", modifier = Modifier
-            .fillMaxSize()
-            .weight(0.5F)
-        )
-        Box{
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.grey_background)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_isen),
+                contentDescription = context.getString(R.string.logo_isen),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .size(width = 300.dp, height = 100.dp)
+            )
+            Text(
+                text = getString(context, R.string.app_name),
+                fontSize = 25.sp,
+                modifier = Modifier.padding(top = 10.dp)
+            )
+        }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+                    .weight(1F)
             ) {
                 items(items = responses) { response ->
-                    Text(
-                        text = response,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    Card(){
+                        Text(
+                            text = response,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(vertical = 10.dp))
                 }
+
             }
 
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .align(Alignment.BottomCenter)
-                    .padding(10.dp)
-                    .height(50.dp)
+                    .padding(20.dp)
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp))
                     .background(colorResource(id = R.color.grey_input)),
                 verticalAlignment = Alignment.CenterVertically,
 
                 ){
                 TextField(
+                    modifier = Modifier.weight(1F),
                     value = userInput.value,
                     onValueChange = { newValue ->
                         userInput.value = newValue
@@ -127,7 +136,6 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                         disabledContainerColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     ),
-                    modifier = Modifier.weight(1F)
                 )
                 IconButton(onClick = {
 
@@ -146,7 +154,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                 },
                     modifier = Modifier
                         .background(colorResource(id = R.color.red), shape = CircleShape)
-                        .border(width = 5.dp, color = colorResource(id = R.color.grey_input), shape = CircleShape),
+                        .size(35.dp),
 
                     content = {
                         Image(
@@ -158,8 +166,10 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                         )
                     },
                 )
+                Spacer(modifier = Modifier.size(10.dp))
             }
-        }
+
+
 
     }
 }
