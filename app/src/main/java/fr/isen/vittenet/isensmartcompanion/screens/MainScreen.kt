@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -87,77 +88,79 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
             .fillMaxSize()
             .weight(0.5F)
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(16.dp)
-        ) {
-            items(items = responses) { response ->
-                Text(
-                    text = response,
-                    modifier = Modifier.padding(8.dp)
+        Box{
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                items(items = responses) { response ->
+                    Text(
+                        text = response,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp)
+                    .height(50.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(colorResource(id = R.color.grey_input)),
+                verticalAlignment = Alignment.CenterVertically,
+
+                ){
+                TextField(
+                    value = userInput.value,
+                    onValueChange = { newValue ->
+                        userInput.value = newValue
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                    modifier = Modifier.weight(1F)
+                )
+                IconButton(onClick = {
+
+                    coroutineScope.launch {
+                        try {
+                            val responseText = generateResponse(userInput.value)
+                            Toast.makeText(context, "Send", Toast.LENGTH_LONG).show()
+                            responses.add(responseText)
+                            chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
+                            userInput.value = ""
+
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                },
+                    modifier = Modifier
+                        .background(colorResource(id = R.color.red), shape = CircleShape)
+                        .border(width = 5.dp, color = colorResource(id = R.color.grey_input), shape = CircleShape),
+
+                    content = {
+                        Image(
+                            painterResource(R.drawable.send),
+                            context.getString(R.string.send_button),
+                            colorFilter = ColorFilter.tint(Color.White),
+                            modifier = Modifier.size(15.dp)
+
+                        )
+                    },
                 )
             }
         }
 
-
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(10.dp)
-                .height(50.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(colorResource(id = R.color.grey_input)),
-            verticalAlignment = Alignment.CenterVertically,
-
-            ){
-            TextField(
-                value = userInput.value,
-                onValueChange = { newValue ->
-                    userInput.value = newValue
-                },
-                shape = RoundedCornerShape(20.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier.weight(1F)
-            )
-            IconButton(onClick = {
-
-                coroutineScope.launch {
-                    try {
-                        val responseText = generateResponse(userInput.value)
-                        Toast.makeText(context, "Send", Toast.LENGTH_LONG).show()
-                        responses.add(responseText)
-                        chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
-                        userInput.value = ""
-
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-            },
-                modifier = Modifier
-                    .background(colorResource(id = R.color.red), shape = CircleShape)
-                    .border(width = 5.dp, color = colorResource(id = R.color.grey_input), shape = CircleShape),
-
-                content = {
-                    Image(
-                        painterResource(R.drawable.send),
-                        context.getString(R.string.send_button),
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(15.dp)
-
-                    )
-                },
-            )
-        }
     }
 }
 

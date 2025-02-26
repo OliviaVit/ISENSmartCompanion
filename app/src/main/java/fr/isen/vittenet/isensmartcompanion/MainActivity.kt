@@ -12,9 +12,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
             val homeTab = NavBarItem(title = ContextCompat.getString(context, R.string.home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val eventsTab = NavBarItem(title = ContextCompat.getString(context, R.string.events), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange, badgeAmount = 7)
-            val historyTab = NavBarItem(title = ContextCompat.getString(context, R.string.history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val historyTab = NavBarItem(title = ContextCompat.getString(context, R.string.history), selectedIcon = Icons.Filled.Menu, unselectedIcon = Icons.Outlined.Menu)
 
             val navBarItems = listOf(homeTab, eventsTab, historyTab)
             val navController = rememberNavController()
@@ -78,6 +80,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                     }
+
                 }
             }
         }

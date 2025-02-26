@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#c41e21</color>
     <color name="grey_input">#e1e2ec</color>
+    <color name="light_grey">#fcfcff</color>
     <color name="grey_background">#faf8ff</color>
+    <color name="light_blue">#ddddeb</color>
+    <color name="blue">#262649</color>
 </resources>
