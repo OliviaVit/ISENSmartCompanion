@@ -5,31 +5,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.navigation.compose.composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.vectorResource
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
 import fr.isen.vittenet.isensmartcompanion.screens.EventsScreen
@@ -52,11 +44,12 @@ class MainActivity : ComponentActivity() {
 
             val context = LocalContext.current
 
-            val homeTab = NavBarItem(title = ContextCompat.getString(context, R.string.home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val eventsTab = NavBarItem(title = ContextCompat.getString(context, R.string.events), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange, badgeAmount = 7)
-            val historyTab = NavBarItem(title = ContextCompat.getString(context, R.string.history), selectedIcon = Icons.Filled.Menu, unselectedIcon = Icons.Outlined.Menu)
+            val homeTab = NavBarItem(title = ContextCompat.getString(context, R.string.home), selectedIcon = ImageVector.vectorResource(R.drawable.home_clicked), unselectedIcon = ImageVector.vectorResource(R.drawable.home_unclicked))
+            val eventsTab = NavBarItem(title = ContextCompat.getString(context, R.string.events), selectedIcon = ImageVector.vectorResource(R.drawable.event_clicked), unselectedIcon = ImageVector.vectorResource(R.drawable.event_unclicked))
+            val historyTab = NavBarItem(title = ContextCompat.getString(context, R.string.history), selectedIcon = ImageVector.vectorResource(R.drawable.history_clicked), unselectedIcon = ImageVector.vectorResource(R.drawable.history_unclicked))
+            val calendarTab = NavBarItem(title = ContextCompat.getString(context, R.string.calendar), selectedIcon = ImageVector.vectorResource(R.drawable.calendar_clicked), unselectedIcon = ImageVector.vectorResource(R.drawable.calendar_unclicked))
 
-            val navBarItems = listOf(homeTab, eventsTab, historyTab)
+            val navBarItems = listOf(homeTab, eventsTab, historyTab, calendarTab)
             val navController = rememberNavController()
 
             val db = AppDatabase.getDatabase(context)

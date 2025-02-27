@@ -13,4 +13,13 @@
     <color name="grey_background">#faf8ff</color>
     <color name="light_blue">#ddddeb</color>
     <color name="blue">#262649</color>
+
+    <color name="vie_associative_color">#FFADAD</color>
+    <color name="bde_color">#FFD6A5</color>
+    <color name="bds_color">#FDFFB6</color>
+    <color name="professionnel_color">#CAFFBF</color>
+    <color name="concours_color">#9BF6FF</color>
+    <color name="institutionnel_color">#A0C4FF</color>
+    <color name="technologique_color">#BDB2FF</color>
+    <color name="international_color">#FFC6FF</color>
 </resources>

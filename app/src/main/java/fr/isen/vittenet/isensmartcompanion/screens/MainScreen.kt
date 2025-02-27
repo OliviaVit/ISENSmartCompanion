@@ -40,10 +40,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
@@ -157,10 +159,10 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
 
                     content = {
                         Image(
-                            painterResource(R.drawable.send),
+                            ImageVector.vectorResource(R.drawable.send),
                             context.getString(R.string.send_button),
                             colorFilter = ColorFilter.tint(Color.White),
-                            modifier = Modifier.size(15.dp)
+                            modifier = Modifier.size(25.dp)
 
                         )
                     },

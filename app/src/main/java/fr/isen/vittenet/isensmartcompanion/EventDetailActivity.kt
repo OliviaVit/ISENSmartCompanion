@@ -61,6 +61,18 @@ import fr.isen.vittenet.isensmartcompanion.screens.ui.theme.ISENSmartCompanionTh
 import kotlinx.coroutines.launch
 import android.Manifest
 import android.app.PendingIntent
+import android.os.Handler
+import android.os.Looper
+import android.content.SharedPreferences
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontStyle
+import androidx.core.graphics.ColorUtils
+import fr.isen.vittenet.isensmartcompanion.objects.NotificationHelper
 
 
 class EventDetailActivity : ComponentActivity() {
@@ -83,9 +95,18 @@ class EventDetailActivity : ComponentActivity() {
     }
 }
 
+
+
 @Composable
-fun EventDetail(title: String, descriptionEvent: String,date: String, location: String,category: String, modifier: Modifier = Modifier) {
+fun EventDetail(
+    title: String, descriptionEvent: String, date: String, location: String, category: String, modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
+
+    var isNotified by remember { mutableStateOf(sharedPreferences.getBoolean(title, false)) }
+    val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
 
     val notificationLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -98,27 +119,7 @@ fun EventDetail(title: String, descriptionEvent: String,date: String, location: 
         }
     )
 
-
-    val builder = NotificationCompat.Builder(context, "1")
-        .setSmallIcon(R.drawable.question)
-        .setDefaults(NotificationCompat.DEFAULT_ALL)
-        .setContentTitle(title)
-        .setContentText(descriptionEvent)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
-
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val name = "channel_name"
-        val descriptionText = "channel description"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel("1", name, importance).apply {
-            description = descriptionText
-        }
-
-        val notificationManager: NotificationManager =
-            context.getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-    }
+    NotificationHelper.createNotificationChannel(context)
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,56 +129,145 @@ fun EventDetail(title: String, descriptionEvent: String,date: String, location: 
             .padding(horizontal = 50.dp)
     ) {
         item {
+            Row() {
+                Spacer(modifier = Modifier.weight(1F))
+                Button(
+                    onClick = {
+                        if (ActivityCompat.checkSelfPermission(
+                                context, Manifest.permission.POST_NOTIFICATIONS
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            notificationLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                            return@Button
+                        }
+                        if(!isNotified){
+                            NotificationHelper.showNotification(context, title, descriptionEvent) {}
+                            editor.putBoolean(title, true).apply()
+                        }
+                        isNotified = !isNotified
+
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red)),
+                    ) {
+                    Text(
+                        text = "Notifications",
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    Image(
+                        painter = painterResource(
+                            if (isNotified) R.drawable.on else R.drawable.off
+                        ),
+                        contentDescription = "Notification",
+                        modifier = Modifier.size(width = 50.dp, height = 30.dp)
+                    )
+                }
+
+                /*Icon(
+                    painter = painterResource(
+                        if (isNotified) R.drawable.notif_clicked else R.drawable.notif_unclicked
+                    ),
+                    contentDescription = if (isNotified) "Notification active" else "Notification inactive",
+                    tint = colorResource(R.color.white),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(colorResource(R.color.red))
+                )*/
+            }
+
+            Spacer(modifier = Modifier.size(20.dp))
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                Column(modifier = Modifier
-                    .padding(16.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth().background(colorResource(R.color.blue))
                 ) {
-                    Text(text = title,modifier = Modifier.padding(10.dp))
-                    Text(text = descriptionEvent,modifier = Modifier.padding(10.dp))
-                    Text(text = date,modifier = Modifier.padding(10.dp))
-                    Text(text = location,modifier = Modifier.padding(10.dp))
-                    Text(text = category,modifier = Modifier.padding(10.dp))
-
+                    Text(
+                        text = title,
+                        style = TextStyle(fontSize = 25.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.white), letterSpacing = 2.sp),
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
 
-            }
-            Button(
-                onClick = {
-                    with(NotificationManagerCompat.from(context)) {
-                        if (ActivityCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.POST_NOTIFICATIONS
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            return@with
-                        }
-                        notify(1, builder.build())
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillParentMaxWidth()) {
+                    Text(
+                        text = descriptionEvent,
+                        style = TextStyle( fontWeight = FontWeight.SemiBold, fontSize = 18.sp, lineHeight = 25.sp),
+                        modifier = Modifier.padding(18.dp).fillMaxWidth()
+                    )
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 20.dp)
+                    ){
+                        Image(
+                            painterResource(R.drawable.calendar),
+                            contentDescription = "Date",
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(text = date, modifier = Modifier.padding(10.dp))
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red)),
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Etre informé",
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Image(
-                    painterResource(R.drawable.trash),
-                    contentDescription = "Notification",
-                    modifier = Modifier.size(18.dp)
-                )
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 20.dp)
+                    ){
+                        Image(
+                            painterResource(R.drawable.pin),
+                            contentDescription = "Lieu",
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(text = location, modifier = Modifier.padding(10.dp))
+                    }
+
+                    val backgroundColor = getCategoryColor(category)
+
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                            .padding(top=10.dp)
+
+                    ) {
+                        Text(
+                            text = category,
+                            color = colorResource(R.color.blue),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(30.dp))
+                                .background(backgroundColor)
+                                .border(width = 2.dp, color = colorResource(R.color.blue), shape = RoundedCornerShape(30.dp))
+                                .padding(5.dp)
+                                .padding(horizontal = 20.dp)
+                        )
+                    }
+
+                }
             }
 
         }
+    }
+}
 
-
+@Composable
+fun getCategoryColor(category: String): Color {
+    return when (category) {
+        "Vie associative" -> colorResource(id = R.color.vie_associative_color)
+        "BDE" -> colorResource(id = R.color.bde_color)
+        "BDS" -> colorResource(id = R.color.bds_color)
+        "Professionnel" -> colorResource(id = R.color.professionnel_color)
+        "Concours" -> colorResource(id = R.color.concours_color)
+        "Institutionnel" -> colorResource(id = R.color.institutionnel_color)
+        "Technologique" -> colorResource(id = R.color.technologique_color)
+        "International" -> colorResource(id = R.color.international_color)
+        else -> Color.Cyan
     }
 }
 

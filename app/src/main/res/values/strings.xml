@@ -5,6 +5,7 @@
     <string name="home">Home</string>
     <string name="events">Events</string>
     <string name="history">History</string>
+    <string name="calendar">Calendar</string>
     <string name="title_activity_event_detail">EventDetailActivity</string>
     <string name="folder">Folder Icon</string>
 </resources>
