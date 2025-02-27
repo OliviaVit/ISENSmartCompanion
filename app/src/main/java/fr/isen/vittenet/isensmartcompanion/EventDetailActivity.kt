@@ -163,16 +163,6 @@ fun EventDetail(
                     )
                 }
 
-                /*Icon(
-                    painter = painterResource(
-                        if (isNotified) R.drawable.notif_clicked else R.drawable.notif_unclicked
-                    ),
-                    contentDescription = if (isNotified) "Notification active" else "Notification inactive",
-                    tint = colorResource(R.color.white),
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(colorResource(R.color.red))
-                )*/
             }
 
             Spacer(modifier = Modifier.size(20.dp))
