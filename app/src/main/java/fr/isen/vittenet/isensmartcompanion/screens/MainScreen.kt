@@ -142,7 +142,6 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                     coroutineScope.launch {
                         try {
                             val responseText = generateResponse(userInput.value)
-                            Toast.makeText(context, "Send", Toast.LENGTH_LONG).show()
                             responses.add(responseText)
                             chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
                             userInput.value = ""

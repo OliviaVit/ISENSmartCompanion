@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
             val navBarItems = listOf(homeTab, eventsTab, historyTab)
             val navController = rememberNavController()
 
-            val db = AppDatabase.getDatabase(context) // Utilisation du Singleton
+            val db = AppDatabase.getDatabase(context)
 
 
             ISENSmartCompanionTheme {

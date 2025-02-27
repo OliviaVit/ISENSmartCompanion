@@ -68,11 +68,6 @@ fun EventsScreen() {
                     .padding(vertical = 8.dp)
                     .clickable {
                         val intent = Intent(context, EventDetailActivity::class.java)
-                        /*intent.putExtra("title", event.title);
-                        intent.putExtra("description", event.description);
-                        intent.putExtra("date", event.date);
-                        intent.putExtra("location", event.location);
-                        intent.putExtra("category", event.category);*/
                         intent.putExtra("event", event)
                         context.startActivity(intent);
                     }
