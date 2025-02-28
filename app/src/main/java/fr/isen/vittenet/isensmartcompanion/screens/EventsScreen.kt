@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +49,7 @@ import androidx.compose.ui.unit.Dp
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.interfaces.EventService
 import fr.isen.vittenet.isensmartcompanion.models.EventModel
-import fr.isen.vittenet.isensmartcompanion.getCategoryColor
+import fr.isen.vittenet.isensmartcompanion.screens.getCategoryColor
 
 
 const val BASE_URL = "https://isen-smart-companion-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -74,72 +78,89 @@ fun EventsScreen() {
             Toast.makeText(context, "Error fetching events: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-    Row {
-        Text(text = "Evenements à venir")
-    }
-
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(top = 50.dp)
-            .fillMaxSize()
-            .padding(horizontal = 50.dp)
-    ) {
-        items(events) { event ->
-            val isNotified = getIsNotified(context, event.title)
-            val categoryColor = getCategoryColor(event.category)
-            Box(
-            ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .clickable {
-                            val intent = Intent(context, EventDetailActivity::class.java)
-                            intent.putExtra("event", event)
-                            context.startActivity(intent);
-                        }
+    Column {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ){
+            Image(
+                painterResource(R.drawable.calendar),
+                context.getString(R.string.folder),
+                modifier = Modifier.size(50.dp)
+            )
+            Text(
+                text = "Evenements à venir",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        Spacer(modifier = Modifier.size(10.dp))
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(horizontal = 50.dp)
+        ) {
+            items(events) { event ->
+                val isNotified = getIsNotified(context, event.title)
+                val categoryColor = getCategoryColor(event.category)
+                Box(
                 ) {
-
-                    Row(
+                    Card(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .clickable {
+                                val intent = Intent(context, EventDetailActivity::class.java)
+                                intent.putExtra("event", event)
+                                context.startActivity(intent);
+                            }
                     ) {
-                        Text(
-                            text = "",
+
+                        Row(
                             modifier = Modifier
-                                .padding(end = 20.dp)
-                                .fillMaxHeight()
-                                .width(15.dp)
-                                .background(categoryColor)
-                                .padding(vertical = 16.dp)
-                        )
-                        Text(
-                            text = event.title,
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        )
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "",
+                                modifier = Modifier
+                                    .padding(end = 20.dp)
+                                    .fillMaxHeight()
+                                    .width(15.dp)
+                                    .background(categoryColor)
+                                    .padding(vertical = 16.dp)
+                            )
+                            Text(
+                                text = event.title,
+                                modifier = Modifier.padding(vertical = 16.dp)
+                            )
+
+                        }
 
                     }
+                    Icon(
+                        painter = painterResource(
+                            if (isNotified) R.drawable.notif_clicked else R.drawable.notif_unclicked
+                        ),
+                        contentDescription = if (isNotified) "Notification active" else "Notification inactive",
+                        tint = colorResource(R.color.white),
+                        modifier = Modifier
+                            .offset(y = (-15).dp)
+                            .padding(10.dp)
+                            .clip(CircleShape)
+                            .background(colorResource(R.color.red))
+                            .align(Alignment.TopEnd)
 
+                    )
                 }
-                Icon(
-                    painter = painterResource(
-                        if (isNotified) R.drawable.notif_clicked else R.drawable.notif_unclicked
-                    ),
-                    contentDescription = if (isNotified) "Notification active" else "Notification inactive",
-                    tint = colorResource(R.color.white),
-                    modifier = Modifier
-                        .offset(y = (-10).dp)
-                        .clip(CircleShape)
-                        .background(colorResource(R.color.red))
-                        .align(Alignment.TopEnd)
-
-                )
+                Spacer(modifier = Modifier.size(15.dp))
             }
-            Spacer(modifier = Modifier.size(15.dp))
         }
     }
+
 }
 
 @Composable
@@ -154,5 +175,5 @@ fun getIsNotified(context: Context, eventTitle: String): Boolean {
     val sharedPreferences = remember {
         context.getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
     }
-    return sharedPreferences.getBoolean(eventTitle, false) // Retourne true si l'événement a été notifié, sinon false
+    return sharedPreferences.getBoolean(eventTitle, false)
 }

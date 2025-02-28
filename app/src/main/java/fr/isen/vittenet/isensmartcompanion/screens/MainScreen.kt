@@ -64,10 +64,8 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
 
     val context = LocalContext.current
     var userInput = remember { mutableStateOf<String>("") }
-
-    val responses = remember { mutableStateListOf<String>() }
+    val paires = remember { mutableStateListOf<ChatModel>() }
     val chatDao = db.chatDao()
-
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -102,16 +100,22 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                     .padding(16.dp)
                     .weight(1F)
             ) {
-                items(items = responses) { response ->
+                items(items = paires) { paire ->
+
                     Card(){
                         Text(
-                            text = response,
+                            text = paire.question,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    Card(){
+                        Text(
+                            text = paire.answer,
                             modifier = Modifier.padding(8.dp)
                         )
                     }
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
                 }
-
             }
 
             Row(
@@ -125,10 +129,12 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                 ){
                 TextField(
                     modifier = Modifier.weight(1F),
+
                     value = userInput.value,
                     onValueChange = { newValue ->
                         userInput.value = newValue
                     },
+
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
@@ -144,7 +150,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                     coroutineScope.launch {
                         try {
                             val responseText = generateResponse(userInput.value)
-                            responses.add(responseText)
+                            paires.add(ChatModel(question = userInput.value, answer = responseText))
                             chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
                             userInput.value = ""
 
@@ -152,6 +158,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                             Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                         }
                     }
+
                 },
                     modifier = Modifier
                         .background(colorResource(id = R.color.red), shape = CircleShape)
@@ -169,9 +176,6 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                 )
                 Spacer(modifier = Modifier.size(10.dp))
             }
-
-
-
     }
 }
 

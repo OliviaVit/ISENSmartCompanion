@@ -33,11 +33,16 @@ object NotificationHelper {
         }
     }
 
-    fun showNotification(context: Context, title: String, message: String, onPermissionDenied: () -> Unit) {
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+    fun showNotification(
+        context: Context,
+        title: String,
+        message: String,
+        permissionLauncher: ManagedActivityResultLauncher<String, Boolean>
+    ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            onPermissionDenied() // On déclenche l'action pour demander la permission
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             return
         }
 

@@ -86,7 +86,7 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                     .padding(16.dp)
             ) {
                 items(chatMessages) { chat ->
-                    val date = Date(chat.timestamp) // Convertir en objet Date
+                    val date = Date(chat.timestamp)
                     val dateFormate = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()) // Définir le format
 
                     Card(

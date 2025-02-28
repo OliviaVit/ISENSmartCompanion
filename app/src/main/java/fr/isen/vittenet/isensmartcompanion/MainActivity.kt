@@ -1,18 +1,14 @@
 package fr.isen.vittenet.isensmartcompanion
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.composable
 import androidx.compose.ui.Modifier
@@ -22,7 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import fr.isen.ines.isensmartcompanion.screens.CalendarScreen
 import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
+import fr.isen.vittenet.isensmartcompanion.models.CalendarModel
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
 import fr.isen.vittenet.isensmartcompanion.screens.EventsScreen
 import fr.isen.vittenet.isensmartcompanion.screens.HistoryScreen
@@ -37,6 +35,7 @@ data class NavBarItem(
 )
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -69,6 +68,10 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(historyTab.title) {
                                 HistoryScreen(innerPadding,db)
+                            }
+                            composable(calendarTab.title) {
+                                //CalendarScreen()
+                                CalendarModel()
                             }
                         }
 
