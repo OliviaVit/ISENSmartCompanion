@@ -12,5 +12,6 @@ data class LessonModel(
     val description: String,
     val day: String,
     val location: String,
-    val time: String
+    val time: String,
+    val isRecurrent: Boolean
 ) : Serializable

@@ -1,8 +1,12 @@
 package fr.isen.vittenet.isensmartcompanion.models
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.media.metrics.Event
 import android.os.Build
 import android.util.Log
+import android.widget.DatePicker
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -18,10 +22,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,8 +37,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -73,23 +81,23 @@ import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Locale
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarModel() {
 
     val baseLessons = listOf(
-        LessonModel(1,"Mathématiques", "Cours de mathématiques avancées", "Lundi", "Salle 101", "08:00"),
-        LessonModel(2,"Physique", "Cours de physique sur la mécanique quantique", "Mardi", "Salle 202", "10:00"),
-        LessonModel( 3,"Informatique", "Introduction à la programmation en Kotlin", "Mercredi", "Salle 303", "14:00"),
-        LessonModel( 4,"Chimie", "Cours de chimie organique", "Jeudi", "Salle 404", "09:00"),
-        LessonModel(5,"Histoire", "Étude des grandes civilisations", "Vendredi", "Salle 505", "11:00"),
-        LessonModel( 6,"Anglais", "Cours d'anglais avancé", "Lundi", "Salle 606", "13:00"),
-        LessonModel( 7,"Électronique", "Introduction aux circuits électriques", "Mardi", "Salle 707", "15:00"),
-        LessonModel( 8,"Philosophie", "Philosophie des sciences", "Mercredi", "Salle 808", "16:00"),
-        LessonModel( 9,"Sport", "Activités sportives et entraînement", "Jeudi", "Salle de sport", "17:00"),
-        LessonModel( 10,"Biologie", "Cours sur la génétique et l'évolution", "Vendredi", "Salle 909", "18:00")
+        LessonModel(1,"Mathématiques", "Cours de mathématiques avancées", "Lundi", "Salle 101", "08:00",true),
+        LessonModel(2,"Physique", "Cours de physique sur la mécanique quantique", "Mardi", "Salle 202", "10:00",true),
+        LessonModel( 3,"Informatique", "Introduction à la programmation en Kotlin", "Mercredi", "Salle 303", "14:00",true),
+        LessonModel( 4,"Chimie", "Cours de chimie organique", "Jeudi", "Salle 404", "09:00",true),
+        LessonModel(5,"Histoire", "Étude des grandes civilisations", "Vendredi", "Salle 505", "11:00",true),
+        LessonModel( 6,"Anglais", "Cours d'anglais avancé", "Lundi", "Salle 606", "13:00",true),
+        LessonModel( 7,"Électronique", "Introduction aux circuits électriques", "Mardi", "Salle 707", "15:00",true),
+        LessonModel( 8,"Philosophie", "Philosophie des sciences", "Mercredi", "Salle 808", "16:00",true),
+        LessonModel( 9,"Sport", "Activités sportives et entraînement", "Jeudi", "Salle de sport", "17:00",true),
+        LessonModel( 10,"Biologie", "Cours sur la génétique et l'évolution", "Vendredi", "Salle 909", "18:00",true)
     )
+
 
     var lessons by remember { mutableStateOf<List<LessonModel>>(emptyList()) }
 
@@ -104,6 +112,7 @@ fun CalendarModel() {
 
     var showDialog by remember { mutableStateOf(false) }
     val database = LessonDatabase.getDatabase(context)
+
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
@@ -206,13 +215,49 @@ fun CalendarModel() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
     var title by remember { mutableStateOf(TextFieldValue("")) }
     var description by remember { mutableStateOf(TextFieldValue("")) }
-    var day by remember { mutableStateOf(TextFieldValue("")) }
     var location by remember { mutableStateOf(TextFieldValue("")) }
-    var time by remember { mutableStateOf(TextFieldValue("")) }
+    var time by remember { mutableStateOf<LocalTime?>(null) }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) } // Pour événement unique
+
+    val context = LocalContext.current
+
+    // Choix entre événement unique ou récurrent
+    var isRecurrent by remember { mutableStateOf(true) }
+
+    // Liste des jours de la semaine
+    val joursSemaine = listOf("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche")
+    val selectedDays = remember { mutableStateMapOf<String, Boolean>().apply { joursSemaine.forEach { put(it, false) } } }
+
+    // TimePickerDialog pour sélectionner l'heure
+    val timePickerDialog = remember {
+        TimePickerDialog(
+            context,
+            { _: TimePicker, hour: Int, minute: Int ->
+                time = LocalTime.of(hour, minute)
+            },
+            12, // Heure par défaut
+            0,  // Minute par défaut
+            true // Format 24h
+        )
+    }
+
+    // DatePickerDialog pour sélectionner une date spécifique
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                selectedDate = LocalDate.of(year, month + 1, dayOfMonth) // Mois commence à 0 en Java
+            },
+            LocalDate.now().year,
+            LocalDate.now().monthValue - 1,
+            LocalDate.now().dayOfMonth
+        )
+    }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -230,32 +275,93 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                     label = { Text("Description") }
                 )
                 OutlinedTextField(
-                    value = day,
-                    onValueChange = { day = it },
-                    label = { Text("Jour (ex: Lundi)") }
-                )
-                OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
                     label = { Text("Salle") }
                 )
-                OutlinedTextField(
-                    value = time,
-                    onValueChange = { time = it },
-                    label = { Text("Heure (ex: 10:00)") }
-                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Sélection entre événement récurrent ou unique
+                Row {
+                    Button(onClick = { isRecurrent = true }, enabled = !isRecurrent) {
+                        Text("Événement récurrent")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(onClick = { isRecurrent = false }, enabled = isRecurrent) {
+                        Text("Événement unique")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Si événement récurrent, afficher les jours de la semaine
+                if (isRecurrent) {
+                    Column {
+                        Text("Choisissez les jours :", style = MaterialTheme.typography.bodyMedium)
+                        joursSemaine.forEach { jour ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                                    .toggleable(
+                                        value = selectedDays[jour] == true,
+                                        onValueChange = { selectedDays[jour] = it }
+                                    )
+                            ) {
+                                Checkbox(
+                                    checked = selectedDays[jour] == true,
+                                    onCheckedChange = { selectedDays[jour] = it }
+                                )
+                                Text(jour, modifier = Modifier.padding(start = 8.dp))
+                            }
+                        }
+                    }
+                }
+                // Si événement unique, afficher le bouton pour sélectionner une date
+                else {
+                    Column {
+                        Button(onClick = { datePickerDialog.show() }) {
+                            Text("Sélectionner une date")
+                        }
+                        selectedDate?.let {
+                            Text(
+                                text = "Date sélectionnée : ${it.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Bouton pour ouvrir le TimePickerDialog
+                Button(onClick = { timePickerDialog.show() }) {
+                    Text("Sélectionner une heure")
+                }
+
+                // Affichage de l'heure sélectionnée
+                time?.let {
+                    Text(
+                        text = "Heure sélectionnée : ${it.toString()}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         },
         confirmButton = {
             Button(
                 onClick = {
+                    val selectedDaysList = if (isRecurrent) selectedDays.filterValues { it }.keys.joinToString(", ") else ""
+
                     val lesson = LessonModel(
-                        id = (1..1000).random(), // Génère un ID aléatoire
+                        id = (1..1000).random(),
                         title = title.text,
                         description = description.text,
-                        day = day.text,
+                        day = if (isRecurrent) selectedDaysList else selectedDate?.toString() ?: "", // Utilisation de la date si événement unique
                         location = location.text,
-                        time = time.text
+                        time = time?.toString() ?: "00:00",
+                        isRecurrent = isRecurrent
                     )
                     onAddLesson(lesson)
                 }
@@ -270,8 +376,6 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
         }
     )
 }
-
-
 @RequiresApi(Build.VERSION_CODES.O)
 fun trieListeEvents(events: List<EventModel>, selectedDate: LocalDate): List<EventModel> {
     return events.filter { event ->
@@ -282,10 +386,23 @@ fun trieListeEvents(events: List<EventModel>, selectedDate: LocalDate): List<Eve
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun trieListeLessons(lessons: List<LessonModel>, selectedDate: LocalDate): List<LessonModel> {
-    val selectedDay = selectedDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRANCE)
-    return lessons
-        .filter { lesson -> lesson.day.equals(selectedDay, ignoreCase = true) }
-        .sortedBy { lesson -> LocalTime.parse(lesson.time) }
+    val selectedDayOfWeek = selectedDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRANCE)
+
+    return lessons.filter { lesson ->
+        if (lesson.isRecurrent) {
+            // Vérifier si le jour de la semaine de la date sélectionnée correspond à l'un des jours stockés
+            lesson.day.split(", ").any { it.equals(selectedDayOfWeek, ignoreCase = true) }
+        } else {
+            // Vérifier si la date stockée correspond exactement à la date sélectionnée (événement unique)
+            lesson.day == selectedDate.toString()
+        }
+    }.sortedBy { lesson ->
+        try {
+            LocalTime.parse(lesson.time, DateTimeFormatter.ofPattern("H:mm"))
+        } catch (e: DateTimeParseException) {
+            LocalTime.MIN // Si erreur, positionne en premier
+        }
+    }
 }
 
 
