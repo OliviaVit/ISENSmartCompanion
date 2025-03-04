@@ -18,10 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import fr.isen.ines.isensmartcompanion.screens.CalendarScreen
 import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
-import fr.isen.vittenet.isensmartcompanion.models.CalendarModel
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
+import fr.isen.vittenet.isensmartcompanion.screens.CalendarScreen
 import fr.isen.vittenet.isensmartcompanion.screens.EventsScreen
 import fr.isen.vittenet.isensmartcompanion.screens.HistoryScreen
 import fr.isen.vittenet.isensmartcompanion.screens.MainScreen

@@ -1,37 +1,18 @@
 package fr.isen.vittenet.isensmartcompanion.screens
-
-import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -41,17 +22,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.helpers.NotificationHelper
+import fr.isen.vittenet.isensmartcompanion.components.getCategoryColor
+import fr.isen.vittenet.isensmartcompanion.helpers.getIsNotified
+import fr.isen.vittenet.isensmartcompanion.helpers.setNotificationState
 
 @Composable
 fun EventDetail(
     title: String, descriptionEvent: String, date: String, location: String, category: String, modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
 
-    var isNotified by remember { mutableStateOf(sharedPreferences.getBoolean(title, false)) }
-    val editor: SharedPreferences.Editor = sharedPreferences.edit()
-
+    var isNotified by remember { mutableStateOf(getIsNotified(context, title)) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -74,15 +55,15 @@ fun EventDetail(
             .padding(horizontal = 50.dp)
     ) {
         item {
-            Row() {
+            Row {
                 Spacer(modifier = Modifier.weight(1F))
                 Button(
                     onClick = {
                         if (!isNotified) {
                             NotificationHelper.showNotification(context, title, descriptionEvent, permissionLauncher)
-                            editor.putBoolean(title, true).apply()
                         }
                         isNotified = !isNotified
+                        setNotificationState(context, title, isNotified)
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red)),
                 ) {
@@ -99,7 +80,6 @@ fun EventDetail(
                         modifier = Modifier.size(width = 50.dp, height = 30.dp)
                     )
                 }
-
             }
 
             Spacer(modifier = Modifier.size(20.dp))
@@ -112,29 +92,38 @@ fun EventDetail(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth().background(colorResource(R.color.blue))
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(colorResource(R.color.blue))
                 ) {
                     Text(
                         text = title,
-                        style = TextStyle(fontSize = 25.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.white), letterSpacing = 2.sp),
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(R.color.white),
+                            letterSpacing = 2.sp
+                        ),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
 
-
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillParentMaxWidth()) {
+                        .fillMaxWidth()
+                ) {
                     Text(
                         text = descriptionEvent,
-                        style = TextStyle( fontWeight = FontWeight.SemiBold, fontSize = 18.sp, lineHeight = 25.sp),
-                        modifier = Modifier.padding(18.dp).fillMaxWidth()
+                        style = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 18.sp, lineHeight = 25.sp),
+                        modifier = Modifier
+                            .padding(18.dp)
+                            .fillMaxWidth()
                     )
-                    Row (
+                    Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 20.dp)
-                    ){
+                    ) {
                         Image(
                             painterResource(R.drawable.calendar),
                             contentDescription = "Date",
@@ -142,10 +131,10 @@ fun EventDetail(
                         )
                         Text(text = date, modifier = Modifier.padding(10.dp))
                     }
-                    Row (
+                    Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 20.dp)
-                    ){
+                    ) {
                         Image(
                             painterResource(R.drawable.pin),
                             contentDescription = "Lieu",
@@ -161,8 +150,7 @@ fun EventDetail(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
-                            .padding(top=10.dp)
-
+                            .padding(top = 10.dp)
                     ) {
                         Text(
                             text = category,
@@ -175,26 +163,8 @@ fun EventDetail(
                                 .padding(horizontal = 20.dp)
                         )
                     }
-
                 }
             }
-
         }
-    }
-}
-
-
-@Composable
-fun getCategoryColor(category: String): Color {
-    return when (category) {
-        "Vie associative" -> colorResource(id = R.color.vie_associative_color)
-        "BDE" -> colorResource(id = R.color.bde_color)
-        "BDS" -> colorResource(id = R.color.bds_color)
-        "Professionnel" -> colorResource(id = R.color.professionnel_color)
-        "Concours" -> colorResource(id = R.color.concours_color)
-        "Institutionnel" -> colorResource(id = R.color.institutionnel_color)
-        "Technologique" -> colorResource(id = R.color.technologique_color)
-        "International" -> colorResource(id = R.color.international_color)
-        else -> Color.Cyan
     }
 }

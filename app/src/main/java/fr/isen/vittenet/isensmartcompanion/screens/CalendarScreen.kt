@@ -1,7 +1,8 @@
-package fr.isen.ines.isensmartcompanion.screens
+package fr.isen.vittenet.isensmartcompanion.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,7 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.components.AddLessonDialog
 import fr.isen.vittenet.isensmartcompanion.data.LessonManager
 import fr.isen.vittenet.isensmartcompanion.helpers.trieListeEvents
@@ -51,7 +54,7 @@ fun CalendarScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(colorResource(R.color.fond)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -61,7 +64,9 @@ fun CalendarScreen() {
         ) {
             currentMonth = topWithMonth(daysInMonth)
         }
+        Spacer(modifier = Modifier.size(10.dp))
         selectedDate = middleWithDays(daysInMonth, eventsWithDate)
+
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
