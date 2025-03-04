@@ -70,8 +70,8 @@ class MainActivity : ComponentActivity() {
                                 HistoryScreen(innerPadding,db)
                             }
                             composable(calendarTab.title) {
-                                //CalendarScreen()
-                                CalendarModel()
+                                CalendarScreen()
+                                //CalendarModel()
                             }
                         }
 

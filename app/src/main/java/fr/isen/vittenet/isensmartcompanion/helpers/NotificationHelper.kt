@@ -1,4 +1,4 @@
-package fr.isen.vittenet.isensmartcompanion.objects
+package fr.isen.vittenet.isensmartcompanion.helpers
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat

@@ -40,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.vittenet.isensmartcompanion.R
-import fr.isen.vittenet.isensmartcompanion.objects.NotificationHelper
+import fr.isen.vittenet.isensmartcompanion.helpers.NotificationHelper
 
 @Composable
 fun EventDetail(
