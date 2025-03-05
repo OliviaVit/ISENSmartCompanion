@@ -22,6 +22,7 @@ import javax.inject.Inject;
 public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFactory {
 
     private final AbstractExternalDependencyFactory owner = this;
+    private final AccompanistLibraryAccessors laccForAccompanistLibraryAccessors = new AccompanistLibraryAccessors(owner);
     private final AndroidxLibraryAccessors laccForAndroidxLibraryAccessors = new AndroidxLibraryAccessors(owner);
     private final KotlinxLibraryAccessors laccForKotlinxLibraryAccessors = new KotlinxLibraryAccessors(owner);
     private final VersionAccessors vaccForVersionAccessors = new VersionAccessors(providers, config);
@@ -31,6 +32,20 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
     @Inject
     public LibrariesForLibsInPluginsBlock(DefaultVersionCatalog config, ProviderFactory providers, ObjectFactory objects, ImmutableAttributesFactory attributesFactory, CapabilityNotationParser capabilityNotationParser) {
         super(config, providers, objects, attributesFactory, capabilityNotationParser);
+    }
+
+    /**
+     * Dependency provider for <b>compose</b> with <b>com.kizitonwose.calendar:compose</b> coordinates and
+     * with version reference <b>compose</b>
+     * <p>
+     * This dependency was declared in catalog libs.versions.toml
+     *
+     * @deprecated Will be removed in Gradle 9.0.
+     */
+    @Deprecated
+    public Provider<MinimalExternalModuleDependency> getCompose() {
+        org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+        return create("compose");
     }
 
     /**
@@ -59,6 +74,17 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
     public Provider<MinimalExternalModuleDependency> getJunit() {
         org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
         return create("junit");
+    }
+
+    /**
+     * Group of libraries at <b>accompanist</b>
+     *
+     * @deprecated Will be removed in Gradle 9.0.
+     */
+    @Deprecated
+    public AccompanistLibraryAccessors getAccompanist() {
+        org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+        return laccForAccompanistLibraryAccessors;
     }
 
     /**
@@ -106,6 +132,30 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
      */
     public PluginAccessors getPlugins() {
         return paccForPluginAccessors;
+    }
+
+    /**
+     * @deprecated Will be removed in Gradle 9.0.
+     */
+    @Deprecated
+    public static class AccompanistLibraryAccessors extends SubDependencyFactory {
+
+        public AccompanistLibraryAccessors(AbstractExternalDependencyFactory owner) { super(owner); }
+
+        /**
+         * Dependency provider for <b>systemuicontroller</b> with <b>com.google.accompanist:accompanist-systemuicontroller</b> coordinates and
+         * with version reference <b>accompanistSystemuicontroller</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         *
+         * @deprecated Will be removed in Gradle 9.0.
+         */
+        @Deprecated
+        public Provider<MinimalExternalModuleDependency> getSystemuicontroller() {
+            org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+            return create("accompanist.systemuicontroller");
+        }
+
     }
 
     /**
@@ -264,6 +314,20 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
             return create("androidx.activity.compose");
         }
 
+        /**
+         * Dependency provider for <b>ktx</b> with <b>androidx.activity:activity-ktx</b> coordinates and
+         * with version reference <b>activityKtx</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         *
+         * @deprecated Will be removed in Gradle 9.0.
+         */
+        @Deprecated
+        public Provider<MinimalExternalModuleDependency> getKtx() {
+            org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+            return create("androidx.activity.ktx");
+        }
+
     }
 
     /**
@@ -297,6 +361,20 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
     public static class AndroidxCoreLibraryAccessors extends SubDependencyFactory {
 
         public AndroidxCoreLibraryAccessors(AbstractExternalDependencyFactory owner) { super(owner); }
+
+        /**
+         * Dependency provider for <b>i18n</b> with <b>androidx.core:core-i18n</b> coordinates and
+         * with version reference <b>coreI18n</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         *
+         * @deprecated Will be removed in Gradle 9.0.
+         */
+        @Deprecated
+        public Provider<MinimalExternalModuleDependency> getI18n() {
+            org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+            return create("androidx.core.i18n");
+        }
 
         /**
          * Dependency provider for <b>ktx</b> with <b>androidx.core:core-ktx</b> coordinates and
@@ -428,6 +506,20 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
         public Provider<MinimalExternalModuleDependency> getCommon() {
             org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
             return create("androidx.room.common");
+        }
+
+        /**
+         * Dependency provider for <b>ktx</b> with <b>androidx.room:room-ktx</b> coordinates and
+         * with version reference <b>roomKtx</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         *
+         * @deprecated Will be removed in Gradle 9.0.
+         */
+        @Deprecated
+        public Provider<MinimalExternalModuleDependency> getKtx() {
+            org.gradle.internal.deprecation.DeprecationLogger.deprecateBehaviour("Accessing libraries or bundles from version catalogs in the plugins block.").withAdvice("Only use versions or plugins from catalogs in the plugins block.").willBeRemovedInGradle9().withUpgradeGuideSection(8, "kotlin_dsl_deprecated_catalogs_plugins_block").nagUser();
+            return create("androidx.room.ktx");
         }
 
     }
@@ -621,6 +713,16 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
         public VersionAccessors(ProviderFactory providers, DefaultVersionCatalog config) { super(providers, config); }
 
         /**
+         * Version alias <b>accompanistSystemuicontroller</b> with value <b>0.31.1-alpha</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getAccompanistSystemuicontroller() { return getVersion("accompanistSystemuicontroller"); }
+
+        /**
          * Version alias <b>activityCompose</b> with value <b>1.10.0</b>
          * <p>
          * If the version is a rich version and cannot be represented as a
@@ -629,6 +731,16 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
          * This version was declared in catalog libs.versions.toml
          */
         public Provider<String> getActivityCompose() { return getVersion("activityCompose"); }
+
+        /**
+         * Version alias <b>activityKtx</b> with value <b>1.10.1</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getActivityKtx() { return getVersion("activityKtx"); }
 
         /**
          * Version alias <b>agp</b> with value <b>8.8.0</b>
@@ -641,6 +753,16 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
         public Provider<String> getAgp() { return getVersion("agp"); }
 
         /**
+         * Version alias <b>compose</b> with value <b>2.4.0</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getCompose() { return getVersion("compose"); }
+
+        /**
          * Version alias <b>composeBom</b> with value <b>2024.04.01</b>
          * <p>
          * If the version is a rich version and cannot be represented as a
@@ -649,6 +771,16 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
          * This version was declared in catalog libs.versions.toml
          */
         public Provider<String> getComposeBom() { return getVersion("composeBom"); }
+
+        /**
+         * Version alias <b>coreI18n</b> with value <b>1.0.0-alpha01</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getCoreI18n() { return getVersion("coreI18n"); }
 
         /**
          * Version alias <b>coreKtx</b> with value <b>1.15.0</b>
@@ -749,6 +881,16 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
          * This version was declared in catalog libs.versions.toml
          */
         public Provider<String> getRoomCommon() { return getVersion("roomCommon"); }
+
+        /**
+         * Version alias <b>roomKtx</b> with value <b>2.6.1</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getRoomKtx() { return getVersion("roomKtx"); }
 
     }
 

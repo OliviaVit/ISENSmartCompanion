@@ -22,4 +22,7 @@
     <color name="institutionnel_color">#A0C4FF</color>
     <color name="technologique_color">#BDB2FF</color>
     <color name="international_color">#FFC6FF</color>
+
+
+    <color name="fond">#D4E6FF</color>
 </resources>

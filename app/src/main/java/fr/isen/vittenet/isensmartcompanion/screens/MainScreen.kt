@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -68,14 +69,17 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
     val chatDao = db.chatDao()
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            //.background(colorResource(R.color.fond)),
+            .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorResource(id = R.color.grey_background)),
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -84,7 +88,6 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                 contentDescription = context.getString(R.string.logo_isen),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .padding(top = 20.dp)
                     .size(width = 300.dp, height = 100.dp)
             )
             Text(
@@ -97,85 +100,133 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                    .background(Color.White)
                     .padding(16.dp)
                     .weight(1F)
             ) {
                 items(items = paires) { paire ->
 
-                    Card(){
+                    Row(
+
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                    ){
                         Text(
                             text = paire.question,
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier
+                                .clip(
+                                    RoundedCornerShape(
+                                        bottomStart = 18.dp,
+                                        bottomEnd = 18.dp,
+                                        topStart = 18.dp
+                                    )
+                                )
+                                .background(colorResource(R.color.technologique_color))
+                                .padding(10.dp)
+
                         )
                     }
-                    Card(){
+                    Spacer(modifier= Modifier.size(10.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                    ){
                         Text(
                             text = paire.answer,
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier
+                                .clip(
+                                    RoundedCornerShape(
+                                        bottomStart = 18.dp,
+                                        bottomEnd = 18.dp,
+                                        topEnd = 18.dp
+                                    )
+                                )
+                                .background(colorResource(R.color.international_color))
+                                .padding(10.dp)
+
                         )
                     }
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
                 }
             }
-
+        Row (modifier = Modifier.fillMaxWidth()
+            .background(colorResource(R.color.white))
+        ){
             Row(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(colorResource(id = R.color.grey_input)),
-                verticalAlignment = Alignment.CenterVertically,
-
-                ){
-                TextField(
-                    modifier = Modifier.weight(1F),
-
-                    value = userInput.value,
-                    onValueChange = { newValue ->
-                        userInput.value = newValue
-                    },
-
-                    shape = RoundedCornerShape(20.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                )
-                IconButton(onClick = {
-
-                    coroutineScope.launch {
-                        try {
-                            val responseText = generateResponse(userInput.value)
-                            paires.add(ChatModel(question = userInput.value, answer = responseText))
-                            chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
-                            userInput.value = ""
-
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                },
+                modifier = Modifier.fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                    .background(colorResource(R.color.institutionnel_color))
+            ) {
+                Row(
                     modifier = Modifier
-                        .background(colorResource(id = R.color.red), shape = CircleShape)
-                        .size(35.dp),
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(Color.White),
+                    verticalAlignment = Alignment.CenterVertically,
 
-                    content = {
-                        Image(
-                            ImageVector.vectorResource(R.drawable.send),
-                            context.getString(R.string.send_button),
-                            colorFilter = ColorFilter.tint(Color.White),
-                            modifier = Modifier.size(25.dp)
+                    ){
+                    TextField(
+                        modifier = Modifier.weight(1F),
 
-                        )
+                        value = userInput.value,
+                        onValueChange = { newValue ->
+                            userInput.value = newValue
+                        },
+
+                        shape = RoundedCornerShape(20.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        ),
+                    )
+                    IconButton(onClick = {
+
+                        coroutineScope.launch {
+                            try {
+                                val responseText = generateResponse(userInput.value)
+                                paires.add(ChatModel(question = userInput.value, answer = responseText))
+                                chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
+                                userInput.value = ""
+
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
                     },
-                )
-                Spacer(modifier = Modifier.size(10.dp))
+                        modifier = Modifier
+                            .background(colorResource(id = R.color.institutionnel_color), shape = CircleShape)
+                            .size(35.dp),
+
+                        content = {
+                            Image(
+                                ImageVector.vectorResource(R.drawable.send),
+                                context.getString(R.string.send_button),
+                                colorFilter = ColorFilter.tint(Color.White),
+                                modifier = Modifier.size(25.dp)
+
+                            )
+                        },
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+                }
             }
+        }
+
+
+
     }
 }
 

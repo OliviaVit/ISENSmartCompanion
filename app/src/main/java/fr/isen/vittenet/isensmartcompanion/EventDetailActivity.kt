@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import fr.isen.vittenet.isensmartcompanion.models.EventModel
-import fr.isen.vittenet.isensmartcompanion.screens.ui.theme.ISENSmartCompanionTheme
+import fr.isen.vittenet.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import fr.isen.vittenet.isensmartcompanion.screens.EventDetail
 
 

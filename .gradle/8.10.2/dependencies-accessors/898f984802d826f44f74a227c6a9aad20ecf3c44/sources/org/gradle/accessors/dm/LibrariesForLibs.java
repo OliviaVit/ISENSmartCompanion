@@ -22,6 +22,7 @@ import javax.inject.Inject;
 public class LibrariesForLibs extends AbstractExternalDependencyFactory {
 
     private final AbstractExternalDependencyFactory owner = this;
+    private final AccompanistLibraryAccessors laccForAccompanistLibraryAccessors = new AccompanistLibraryAccessors(owner);
     private final AndroidxLibraryAccessors laccForAndroidxLibraryAccessors = new AndroidxLibraryAccessors(owner);
     private final KotlinxLibraryAccessors laccForKotlinxLibraryAccessors = new KotlinxLibraryAccessors(owner);
     private final VersionAccessors vaccForVersionAccessors = new VersionAccessors(providers, config);
@@ -31,6 +32,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
     @Inject
     public LibrariesForLibs(DefaultVersionCatalog config, ProviderFactory providers, ObjectFactory objects, ImmutableAttributesFactory attributesFactory, CapabilityNotationParser capabilityNotationParser) {
         super(config, providers, objects, attributesFactory, capabilityNotationParser);
+    }
+
+    /**
+     * Dependency provider for <b>compose</b> with <b>com.kizitonwose.calendar:compose</b> coordinates and
+     * with version reference <b>compose</b>
+     * <p>
+     * This dependency was declared in catalog libs.versions.toml
+     */
+    public Provider<MinimalExternalModuleDependency> getCompose() {
+        return create("compose");
     }
 
     /**
@@ -51,6 +62,13 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
      */
     public Provider<MinimalExternalModuleDependency> getJunit() {
         return create("junit");
+    }
+
+    /**
+     * Group of libraries at <b>accompanist</b>
+     */
+    public AccompanistLibraryAccessors getAccompanist() {
+        return laccForAccompanistLibraryAccessors;
     }
 
     /**
@@ -86,6 +104,22 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
      */
     public PluginAccessors getPlugins() {
         return paccForPluginAccessors;
+    }
+
+    public static class AccompanistLibraryAccessors extends SubDependencyFactory {
+
+        public AccompanistLibraryAccessors(AbstractExternalDependencyFactory owner) { super(owner); }
+
+        /**
+         * Dependency provider for <b>systemuicontroller</b> with <b>com.google.accompanist:accompanist-systemuicontroller</b> coordinates and
+         * with version reference <b>accompanistSystemuicontroller</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         */
+        public Provider<MinimalExternalModuleDependency> getSystemuicontroller() {
+            return create("accompanist.systemuicontroller");
+        }
+
     }
 
     public static class AndroidxLibraryAccessors extends SubDependencyFactory {
@@ -215,6 +249,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
         public AndroidxCoreLibraryAccessors(AbstractExternalDependencyFactory owner) { super(owner); }
 
         /**
+         * Dependency provider for <b>i18n</b> with <b>androidx.core:core-i18n</b> coordinates and
+         * with version reference <b>coreI18n</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         */
+        public Provider<MinimalExternalModuleDependency> getI18n() {
+            return create("androidx.core.i18n");
+        }
+
+        /**
          * Dependency provider for <b>ktx</b> with <b>androidx.core:core-ktx</b> coordinates and
          * with version reference <b>coreKtx</b>
          * <p>
@@ -300,6 +344,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
          */
         public Provider<MinimalExternalModuleDependency> getCommon() {
             return create("androidx.room.common");
+        }
+
+        /**
+         * Dependency provider for <b>ktx</b> with <b>androidx.room:room-ktx</b> coordinates and
+         * with version reference <b>roomKtx</b>
+         * <p>
+         * This dependency was declared in catalog libs.versions.toml
+         */
+        public Provider<MinimalExternalModuleDependency> getKtx() {
+            return create("androidx.room.ktx");
         }
 
     }
@@ -433,6 +487,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
         public VersionAccessors(ProviderFactory providers, DefaultVersionCatalog config) { super(providers, config); }
 
         /**
+         * Version alias <b>accompanistSystemuicontroller</b> with value <b>0.31.1-alpha</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getAccompanistSystemuicontroller() { return getVersion("accompanistSystemuicontroller"); }
+
+        /**
          * Version alias <b>activityCompose</b> with value <b>1.10.0</b>
          * <p>
          * If the version is a rich version and cannot be represented as a
@@ -453,6 +517,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
         public Provider<String> getAgp() { return getVersion("agp"); }
 
         /**
+         * Version alias <b>compose</b> with value <b>2.4.0</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getCompose() { return getVersion("compose"); }
+
+        /**
          * Version alias <b>composeBom</b> with value <b>2024.04.01</b>
          * <p>
          * If the version is a rich version and cannot be represented as a
@@ -461,6 +535,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
          * This version was declared in catalog libs.versions.toml
          */
         public Provider<String> getComposeBom() { return getVersion("composeBom"); }
+
+        /**
+         * Version alias <b>coreI18n</b> with value <b>1.0.0-alpha01</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getCoreI18n() { return getVersion("coreI18n"); }
 
         /**
          * Version alias <b>coreKtx</b> with value <b>1.15.0</b>
@@ -561,6 +645,16 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
          * This version was declared in catalog libs.versions.toml
          */
         public Provider<String> getRoomCommon() { return getVersion("roomCommon"); }
+
+        /**
+         * Version alias <b>roomKtx</b> with value <b>2.6.1</b>
+         * <p>
+         * If the version is a rich version and cannot be represented as a
+         * single version string, an empty string is returned.
+         * <p>
+         * This version was declared in catalog libs.versions.toml
+         */
+        public Provider<String> getRoomKtx() { return getVersion("roomKtx"); }
 
     }
 

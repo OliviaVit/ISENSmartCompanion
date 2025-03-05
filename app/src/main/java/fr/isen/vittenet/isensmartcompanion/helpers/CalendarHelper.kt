@@ -50,3 +50,16 @@ fun parseDate(dateString: String): LocalDate {
         throw DateTimeParseException("Erreur de format de date : $dateString", dateString, 0)
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getEventDates(events: List<EventModel>): List<LocalDate> {
+    return events.mapNotNull { event ->
+        try {
+            parseDate(event.date)
+        } catch (e: Exception) {
+            println("Erreur lors de la conversion de la date : ${event.date}")
+            null
+        }
+    }.distinct()
+}
+

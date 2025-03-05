@@ -9,18 +9,35 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+
+   background = FondColorDark, // Ajoute ici
+    surface = grey // Ajoute ici
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = vert1,
+    secondary = vert2,
+    tertiary = vert3,
+    background = FondColor,
+    primaryContainer = vert1,
+    onPrimaryContainer = vert3,
+    secondaryContainer = vert1,
+    tertiaryContainer = vert3,
+    surfaceVariant = vert3,
+
+
+    //background = FondColor, // Ajoute ici
+    surface = FondColor // Ajoute ici
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,7 +54,7 @@ private val LightColorScheme = lightColorScheme(
 fun ISENSmartCompanionTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -49,6 +66,15 @@ fun ISENSmartCompanionTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+    val systemUiController = rememberSystemUiController()
+    LaunchedEffect(colorScheme) {
+        systemUiController.setStatusBarColor(
+            color = colorScheme.background,
+            darkIcons = true
+        )
+    }
+
 
     MaterialTheme(
         colorScheme = colorScheme,

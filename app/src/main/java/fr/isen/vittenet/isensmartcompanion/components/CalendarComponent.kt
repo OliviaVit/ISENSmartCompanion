@@ -1,8 +1,10 @@
 package fr.isen.vittenet.isensmartcompanion.components
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,19 +19,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getString
 import fr.isen.vittenet.isensmartcompanion.R
-import fr.isen.vittenet.isensmartcompanion.models.EventModel
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -37,7 +35,7 @@ import java.time.YearMonth
 @Composable
 fun middleWithDays(
     daysInMonth: MutableState<List<LocalDate>>,
-    eventsWithDate: SnapshotStateMap<LocalDate, List<EventModel>>
+    eventsDate: List<LocalDate>
 ): MutableState<LocalDate> {
     val selectedDate = remember { mutableStateOf(LocalDate.now()) }
 
@@ -45,10 +43,11 @@ fun middleWithDays(
 
     val firstDayOfMonth = daysInMonth.value.first().dayOfWeek.value
     val emptyDays = (1 until firstDayOfMonth).toList()
+
+
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             daysOfWeek.forEach { day ->
@@ -67,31 +66,34 @@ fun middleWithDays(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(emptyDays.size) {
-                Box(modifier = Modifier.size(40.dp))
+                Box(modifier = Modifier
+                    .aspectRatio(1f)
+                )
             }
 
             items(daysInMonth.value.size) { index ->
                 val day = daysInMonth.value[index]
+                val isSelected = day == selectedDate.value
+                val hasEvent = day in eventsDate
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .aspectRatio(1f)
+                        .clip(CircleShape)
                         .background(
-                            if (day == selectedDate.value) colorResource(R.color.institutionnel_color) else Color.Transparent,
-                            shape = CircleShape
+                            if (isSelected) colorResource(R.color.institutionnel_color) else Color.Transparent,
+
+                        )
+                        .then(
+                            if (hasEvent) Modifier.border(2.dp, Color.Red, CircleShape) else Modifier
                         )
                         .clickable { selectedDate.value = day },
                     contentAlignment = Alignment.Center
                 ) {
-                    if (eventsWithDate.containsKey(day)) {
-                        Box(
-                            modifier = Modifier
-                                .size(6.dp)
-                                .background(Color.Red, shape = RoundedCornerShape(50))
-                        )
-                    }
                     Text(text = day.dayOfMonth.toString(), color = Color.Black)
+
                 }
             }
+
         }
     }
 
@@ -108,7 +110,7 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
-            .background(colorResource(R.color.grey_background))
+            .background(Color.White)
             .padding(20.dp)
     ) {
         Text(
