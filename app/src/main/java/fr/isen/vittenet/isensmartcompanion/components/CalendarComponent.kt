@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -47,7 +48,7 @@ fun middleWithDays(
 
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(30.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             daysOfWeek.forEach { day ->
@@ -56,6 +57,7 @@ fun middleWithDays(
                     modifier = Modifier,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.inversePrimary,
                     fontSize = 20.sp
                 )
             }
@@ -63,10 +65,13 @@ fun middleWithDays(
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
         ) {
             items(emptyDays.size) {
                 Box(modifier = Modifier
+                    .size(35.dp)
                     .aspectRatio(1f)
                 )
             }
@@ -77,24 +82,41 @@ fun middleWithDays(
                 val hasEvent = day in eventsDate
                 Box(
                     modifier = Modifier
+                        .size(35.dp)
                         .aspectRatio(1f)
-                        .clip(CircleShape)
-                        .background(
-                            if (isSelected) colorResource(R.color.institutionnel_color) else Color.Transparent,
-
-                        )
-                        .then(
-                            if (hasEvent) Modifier.border(2.dp, Color.Red, CircleShape) else Modifier
-                        )
-                        .clickable { selectedDate.value = day },
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }                      ) { selectedDate.value = day },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = day.dayOfMonth.toString(), color = Color.Black)
+                    if (isSelected) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(colorResource(R.color.institutionnel_color))
+                        )
+                    }
 
+                    if (hasEvent) {
+                        Box(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
+                        )
+                    }
+
+                    Text(
+                        text = day.dayOfMonth.toString(),
+                        color = MaterialTheme.colorScheme.inversePrimary,
+                        fontSize = 14.sp
+                    )
                 }
-            }
 
+            }
         }
+
     }
 
     return selectedDate
@@ -110,12 +132,13 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(20.dp)
     ) {
         Text(
             text = "Calendar",
             fontSize = 17.sp,
+            color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Bold
         )
         Row(
@@ -130,12 +153,14 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
                 Text(
                     text = currentMonth.month.name,
                     fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.inversePrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = currentMonth.year.toString(),
                     fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.inversePrimary,
                     fontWeight = FontWeight.Medium)
 
             }
@@ -147,24 +172,26 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(30.dp)
-                        .background(colorResource(R.color.institutionnel_color)),
+                        .background(MaterialTheme.colorScheme.secondary),
                     onClick = {
                         currentMonth = currentMonth.minusMonths(1)
                         daysInMonth.value = (1..currentMonth.lengthOfMonth()).map { currentMonth.atDay(it) }
                     }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Mois précédent")
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Mois précédent",
+                        tint = MaterialTheme.colorScheme.background)
                 }
                 Spacer(modifier = Modifier.size(10.dp))
                 IconButton(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(30.dp)
-                        .background(colorResource(R.color.institutionnel_color)),
+                        .background(MaterialTheme.colorScheme.secondary),
                     onClick = {
                         currentMonth = currentMonth.plusMonths(1)
                         daysInMonth.value = (1..currentMonth.lengthOfMonth()).map { currentMonth.atDay(it) }
                     }) {
-                    Icon(Icons.Filled.ArrowForward, contentDescription = "Mois suivant")
+                    Icon(Icons.Filled.ArrowForward, contentDescription = "Mois suivant",
+                        tint = MaterialTheme.colorScheme.background)
                 }
             }
 

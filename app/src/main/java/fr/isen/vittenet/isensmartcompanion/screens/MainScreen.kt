@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
@@ -70,9 +72,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            //.background(colorResource(R.color.fond)),
-            .background(MaterialTheme.colorScheme.background),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -90,18 +90,23 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                 modifier = Modifier
                     .size(width = 300.dp, height = 100.dp)
             )
+        }
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+
             Text(
                 text = getString(context, R.string.app_name),
-                fontSize = 25.sp,
-                modifier = Modifier.padding(top = 10.dp)
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 10.dp).padding(16.dp)
             )
-        }
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                    .background(Color.White)
                     .padding(16.dp)
                     .weight(1F)
             ) {
@@ -125,7 +130,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                                         topStart = 18.dp
                                     )
                                 )
-                                .background(colorResource(R.color.technologique_color))
+                                .background(colorResource(R.color.pastel_purple))
                                 .padding(10.dp)
 
                         )
@@ -148,7 +153,7 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                                         topEnd = 18.dp
                                     )
                                 )
-                                .background(colorResource(R.color.international_color))
+                                .background(colorResource(R.color.pastel_green))
                                 .padding(10.dp)
 
                         )
@@ -156,73 +161,79 @@ fun MainScreen(innerPadding: PaddingValues, db: AppDatabase) {
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
                 }
             }
-        Row (modifier = Modifier.fillMaxWidth()
-            .background(colorResource(R.color.white))
-        ){
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                    .background(colorResource(R.color.institutionnel_color))
-            ) {
+
+            Row (modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+            ){
                 Row(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(Color.White),
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    ){
-                    TextField(
-                        modifier = Modifier.weight(1F),
-
-                        value = userInput.value,
-                        onValueChange = { newValue ->
-                            userInput.value = newValue
-                        },
-
-                        shape = RoundedCornerShape(20.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                    )
-                    IconButton(onClick = {
-
-                        coroutineScope.launch {
-                            try {
-                                val responseText = generateResponse(userInput.value)
-                                paires.add(ChatModel(question = userInput.value, answer = responseText))
-                                chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
-                                userInput.value = ""
-
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                    },
+                    modifier = Modifier.fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                ) {
+                    Row(
                         modifier = Modifier
-                            .background(colorResource(id = R.color.institutionnel_color), shape = CircleShape)
-                            .size(35.dp),
+                            .padding(20.dp)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(MaterialTheme.colorScheme.background),
+                        verticalAlignment = Alignment.CenterVertically,
 
-                        content = {
-                            Image(
-                                ImageVector.vectorResource(R.drawable.send),
-                                context.getString(R.string.send_button),
-                                colorFilter = ColorFilter.tint(Color.White),
-                                modifier = Modifier.size(25.dp)
+                        ){
+                        TextField(
+                            modifier = Modifier.weight(1F),
 
-                            )
+                            value = userInput.value,
+                            onValueChange = { newValue ->
+                                userInput.value = newValue
+                            },
+
+                            shape = RoundedCornerShape(20.dp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent
+                            ),
+                            textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary)
+                        )
+                        IconButton(onClick = {
+
+                            coroutineScope.launch {
+                                try {
+                                    val responseText = generateResponse(userInput.value)
+                                    paires.add(ChatModel(question = userInput.value, answer = responseText))
+                                    chatDao.insert(ChatModel(question = userInput.value, answer = responseText))
+                                    userInput.value = ""
+
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
                         },
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.tertiary, shape = CircleShape)
+                                .size(35.dp),
+
+                            content = {
+                                Image(
+                                    ImageVector.vectorResource(R.drawable.send),
+                                    context.getString(R.string.send_button),
+                                    colorFilter = ColorFilter.tint(Color.White),
+                                    modifier = Modifier.size(25.dp)
+
+                                )
+                            },
+                        )
+                        Spacer(modifier = Modifier.size(10.dp))
+                    }
                 }
             }
+
+
+
         }
 
 

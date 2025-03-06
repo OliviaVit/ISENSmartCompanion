@@ -16,38 +16,42 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
+    primary = electric_blue,
+    onPrimary = white,
+    secondary = pastel_green,
+    tertiary = pink_accent,
+    onTertiary = white,
 
-   background = FondColorDark, // Ajoute ici
-    surface = grey // Ajoute ici
+    background = black,
+    surface = black ,
+
+    secondaryContainer = pink_accent,
+    onSurface = white,
+    onSecondaryContainer = white,
+    onSecondary = white,
+    surfaceVariant = pastel_blue,
+    onSurfaceVariant = white,
+
+    inversePrimary = white
+
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = vert1,
-    secondary = vert2,
-    tertiary = vert3,
-    background = FondColor,
-    primaryContainer = vert1,
-    onPrimaryContainer = vert3,
-    secondaryContainer = vert1,
-    tertiaryContainer = vert3,
-    surfaceVariant = vert3,
+    primary = pastel_blue,
+    onPrimary = black,
+    secondary = pink_accent,
+    tertiary = electric_blue,
+    onTertiary = white,
+    background = white,
 
-
-    //background = FondColor, // Ajoute ici
-    surface = FondColor // Ajoute ici
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondaryContainer = pastel_blue,
+    surface = white,
+    onSurface = electric_blue,
+    onSecondaryContainer = electric_blue,
+    onSecondary = white,
+    surfaceVariant = light_grey,
+    onSurfaceVariant = black,
+    inversePrimary = black
 )
 
 @Composable
@@ -70,8 +74,8 @@ fun ISENSmartCompanionTheme(
     val systemUiController = rememberSystemUiController()
     LaunchedEffect(colorScheme) {
         systemUiController.setStatusBarColor(
-            color = colorScheme.background,
-            darkIcons = true
+            color = colorScheme.primary,
+            darkIcons = false
         )
     }
 

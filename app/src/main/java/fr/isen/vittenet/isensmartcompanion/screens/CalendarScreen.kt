@@ -65,11 +65,10 @@ fun CalendarScreen() {
         }
     }
     val eventsDate = getEventDates(events)
-    println("Dates des événements : $eventsDate")
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.fond)) ,
+            .background(MaterialTheme.colorScheme.primary) ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -89,42 +88,64 @@ fun CalendarScreen() {
 
                 val filteredLessons = trieListeLessons(lessons, selectedDate.value)
                 items(filteredLessons) { lesson ->
-                    Row(
+                    Column (
                         modifier = Modifier
-                            .padding(5.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(15.dp))
-                            .background(colorResource(R.color.technologique_color)),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(){
+                        .fillMaxWidth()
+                            .padding(10.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(colorResource(R.color.institutionnel_color))
+                            ,
+                        horizontalAlignment = Alignment.Start,
+                        ){
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = lesson.time,
+                                    fontSize = 15.sp,
+                                    color = colorResource(R.color.black),
+                                    modifier = Modifier.padding(end = 10.dp)
+                                )
+                                Text(
+                                    text = lesson.title,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = colorResource(R.color.black),
+                                    fontSize = 20.sp,
+                                    modifier = Modifier
+                                )
+                            }
+
+
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    lessonManager.deleteLesson(lesson.id)
+                                    lessons = lessonManager.getAllLessons()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Supprimer un cours"
+                                )
+                            }
+                        }
+                        Row{
                             Text(
-                                text = lesson.time,
+                                text = lesson.location,
                                 fontSize = 15.sp,
+                                color = colorResource(R.color.black),
                                 modifier = Modifier
                                     .padding(8.dp)
                             )
-                            Text(
-                                text = lesson.title,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(8.dp)
-                            )
                         }
 
-                        IconButton(onClick = {
-                            coroutineScope.launch {
-                                lessonManager.deleteLesson(lesson.id)
-                                lessons = lessonManager.getAllLessons()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Supprimer un cours"
-                            )
-                        }
                     }
+
                 }
 
                 val filteredEvents = trieListeEvents(events, selectedDate.value)
@@ -134,13 +155,14 @@ fun CalendarScreen() {
                             .padding(5.dp)
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(15.dp))
-                            .background(colorResource(R.color.international_color)),
+                            .background(colorResource(R.color.pastel_purple)),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween){
                         Text(
                             text = event.title,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp,
+                            color = colorResource(R.color.black),
                             modifier = Modifier.padding(8.dp)
                         )
                     }
@@ -154,7 +176,8 @@ fun CalendarScreen() {
                     showDialog = true
                 },modifier = Modifier
                     .clip(CircleShape)
-                    .background(colorResource(R.color.purple_200))) {
+                    .background(MaterialTheme.colorScheme.secondary)
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "Ajouter un cours"

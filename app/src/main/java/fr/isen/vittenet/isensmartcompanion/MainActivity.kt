@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -87,10 +88,13 @@ class MainActivity : ComponentActivity() {
             val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route
 
             val scaffoldColor = when (currentScreen) {
-                homeTab.title -> colorResource(R.color.fond)
-                eventsTab.title -> colorResource(R.color.fond)
-                historyTab.title -> Color.White
-                calendarTab.title -> Color.White
+                homeTab.title -> if (isSystemInDarkTheme()) colorResource(R.color.electric_blue) else colorResource(R.color.pastel_blue)
+
+                eventsTab.title -> if (isSystemInDarkTheme()) colorResource(R.color.electric_blue) else colorResource(R.color.pastel_blue)
+
+                historyTab.title -> if (isSystemInDarkTheme()) colorResource(R.color.electric_blue) else colorResource(R.color.pastel_blue)
+
+                calendarTab.title -> if (isSystemInDarkTheme()) colorResource(R.color.black) else colorResource(R.color.white)
                 else -> Color.Transparent
             }
 

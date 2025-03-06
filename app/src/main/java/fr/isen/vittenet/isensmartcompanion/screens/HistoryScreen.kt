@@ -17,11 +17,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -30,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -60,22 +63,27 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
     ) {
-        Row (
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
-        ){
+        ) {
             Image(
-                painterResource(R.drawable.open_folder),
-                context.getString(R.string.folder),
+                painter = painterResource(R.drawable.open_folder),
+                contentDescription = "Open folder",
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text = "Historique des chats",
-                style = MaterialTheme.typography.headlineSmall,
+                text = "HISTORY",
+                fontWeight = FontWeight.Black,
+                fontSize = 40.sp,
+                letterSpacing = 2.sp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -84,6 +92,9 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                    .background(MaterialTheme.colorScheme.background)
+
                     .fillMaxHeight()
                     .padding(16.dp)
             ) {
@@ -95,15 +106,21 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
+                            .clip(RoundedCornerShape(30.dp)),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
 
-                    ) {
+                        ) {
                         Box (
                         ){
-                            Column(modifier = Modifier.background(colorResource(R.color.light_blue))) {
+                            Column(modifier = Modifier
+                                .background(MaterialTheme.colorScheme.tertiary)
+
+                            ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier.fillMaxWidth().background(colorResource(R.color.blue))
+                                    modifier = Modifier.fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.tertiary)
                                 ) {
                                     Spacer(modifier = Modifier.padding(start=14.dp))
                                     Image(
@@ -113,7 +130,7 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                                     )
                                     Text(
                                         text = chat.question,
-                                        style = TextStyle(fontSize = 20.sp, fontWeight =  FontWeight.Bold, color = colorResource(R.color.light_blue)),
+                                        style = TextStyle(fontSize = 20.sp, fontWeight =  FontWeight.Bold, color = colorResource(R.color.white)),
                                         modifier = Modifier
                                             .padding(horizontal = 10.dp).padding(14.dp)
                                     )
@@ -122,11 +139,13 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier
-                                        .background(colorResource(R.color.light_blue))
+                                        .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                                        .background(MaterialTheme.colorScheme.surfaceVariant)
                                         .fillMaxWidth()
                                 ) {
                                     Text(
                                         text = chat.answer,
+                                        color = colorResource(R.color.black),
                                         style = TextStyle(fontSize = 15.sp, fontWeight =  FontWeight.Medium),
                                         modifier = Modifier.padding(16.dp)
                                     )
@@ -135,13 +154,17 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.End,
                                     modifier = Modifier
-                                        .padding(7.dp)
+
                                         .fillMaxWidth()
-                                        .background(colorResource(R.color.light_blue))
+                                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                                        .padding(7.dp)
                                 ){
                                     Text(
                                         text = dateFormate.format(date),
                                         style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = colorResource(R.color.white),
+                                        modifier = Modifier.padding(10.dp)
                                     )
                                 }
 
@@ -173,16 +196,17 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                         chatMessages = emptyList()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .padding(16.dp).align(Alignment.BottomCenter)
 
             ) {
                 Text(
-                    text = "Vider l'historique",
+                    text = "Delete all history",
                     style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 )
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 Image(
                     painterResource(R.drawable.trash),
                     contentDescription = "Vider l'historique",

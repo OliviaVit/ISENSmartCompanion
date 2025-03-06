@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,10 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -83,9 +86,8 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                     label = { Text("Titre") },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Blue,
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.Black
+                        focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                     ),
                 )
                 OutlinedTextField(
@@ -94,9 +96,8 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                     label = { Text("Description") },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Blue,
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.Black
+                        focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                     ),
                 )
                 OutlinedTextField(
@@ -105,9 +106,8 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                     label = { Text("Salle") },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Blue,
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.Black
+                        focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                     ),
                 )
 
@@ -119,10 +119,10 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         onClick = { isRecurrent = true },
                         enabled = !isRecurrent,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!isRecurrent) Color.Blue else Color.LightGray, // ✅ Couleur normale
-                            contentColor = Color.White,
-                            disabledContainerColor = Color.Gray,
-                            disabledContentColor = Color.DarkGray
+                            containerColor = if (!isRecurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,
+                            //contentColor = Color.White,
+                            //disabledContainerColor = Color.Gray,
+                            //disabledContentColor = Color.DarkGray
                         )
                     ) {
                         Text("Récurrent")
@@ -132,10 +132,10 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         onClick = { isRecurrent = false },
                         enabled = isRecurrent,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isRecurrent) Color.Green else Color.LightGray, // ✅ Couleur normale
-                            contentColor = Color.White,
-                            disabledContainerColor = Color.Gray, // ✅ Couleur lorsqu'il est désactivé
-                            disabledContentColor = Color.DarkGray
+                            containerColor = if (isRecurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,
+                            //contentColor = Color.White,
+                            //disabledContainerColor = Color.Gray,
+                            //disabledContentColor = Color.DarkGray
                         )
                     ) {
                         Text("Unique")
@@ -184,27 +184,31 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
         },
         confirmButton = {
             Row(
-                modifier = Modifier.fillMaxWidth(), // Prend toute la largeur pour le centrage
-                horizontalArrangement = Arrangement.Center // ✅ Centre les boutons
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Button(onClick = { onDismiss() }) {
                     Text("Annuler")
                 }
-                Spacer(modifier = Modifier.width(16.dp)) // ✅ Espacement entre les boutons
-                Button(onClick = {
-                    val selectedDaysList =
-                        if (isRecurrent) selectedDays.filterValues { it }.keys.joinToString(", ") else ""
-                    val lesson = LessonModel(
-                        id = (1..1000).random(),
-                        title = title.text,
-                        description = description.text,
-                        day = if (isRecurrent) selectedDaysList else selectedDate?.toString() ?: "",
-                        location = location.text,
-                        time = time?.toString() ?: "00:00",
-                        isRecurrent = isRecurrent
-                    )
-                    onAddLesson(lesson)
-                }) {
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = {
+                        val selectedDaysList =
+                            if (isRecurrent) selectedDays.filterValues { it }.keys.joinToString(", ") else ""
+                        val lesson = LessonModel(
+                            id = (1..1000).random(),
+                            title = title.text,
+                            description = description.text,
+                            day = if (isRecurrent) selectedDaysList else selectedDate?.toString()
+                                ?: "",
+                            location = location.text,
+                            time = time?.toString() ?: "00:00",
+                            isRecurrent = isRecurrent
+                        )
+                        onAddLesson(lesson)
+                    },
+                    colors = ButtonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.background, disabledContainerColor =MaterialTheme.colorScheme.secondary, disabledContentColor = MaterialTheme.colorScheme.background ),
+                ){
                     Text("Ajouter")
                 }
             }

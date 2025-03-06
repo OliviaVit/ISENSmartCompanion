@@ -25,7 +25,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import fr.isen.vittenet.isensmartcompanion.EventDetailActivity
@@ -47,13 +49,12 @@ fun EventsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.fond))
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                //.clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
-                .background(colorResource(R.color.fond))
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
@@ -64,17 +65,21 @@ fun EventsScreen() {
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text = "Événements à venir",
-                style = MaterialTheme.typography.headlineSmall,
+                text = "EVENTS",
+                fontWeight = FontWeight.Black,
+                fontSize = 40.sp,
+                letterSpacing = 2.sp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.padding(16.dp)
             )
         }
+        Spacer(modifier = Modifier.size(10.dp))
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 20.dp)
         ) {
             items(events) { event ->
@@ -109,6 +114,7 @@ fun EventsScreen() {
                             )
                             Text(
                                 text = event.title,
+                                color = colorResource(R.color.black),
                                 modifier = Modifier.padding(vertical = 16.dp)
                             )
 
@@ -124,7 +130,7 @@ fun EventsScreen() {
                         modifier = Modifier
                             .padding(10.dp)
                             .clip(CircleShape)
-                            .background(colorResource(R.color.institutionnel_color))
+                            .background(MaterialTheme.colorScheme.tertiary)
                             .padding(5.dp)
                             .size(20.dp)
 

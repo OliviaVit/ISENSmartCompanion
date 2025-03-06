@@ -2,19 +2,18 @@ package fr.isen.vittenet.isensmartcompanion.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFD0D0D0)
-val Pink80 = Color(0xFFD5D5D5)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-val FondColor = Color(0xFFD3E5FE) // Assure-toi que c'est la bonne couleur
+val white = Color(0xFFFEFEFE)
+val pastel_blue = Color(0xFFC1D1FC)
+val electric_blue = Color(0xFF2715C1)
 
-val FondColorDark = Color(0xFF3F51B5) // Assure-toi que c'est la bonne couleur
+val pink_accent = Color(0xFFFE7A84)
 
-val grey = Color(0xFFBBBBBB)
+val black = Color(0xFF1D2031)
 
-val vert1 = Color(0xFF005003)
-val vert2 = Color(0xFF4BAC35)
-val vert3 = Color(0xFF8ECE7F)
+val pastel_purple = Color(0xFFE0BDFB)
+val pastel_green = Color(0xFF99FECA)
+val light_grey = Color(0xFFD5D8E7)
+
+
+

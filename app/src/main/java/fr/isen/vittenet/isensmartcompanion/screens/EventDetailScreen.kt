@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.helpers.NotificationHelper
 import fr.isen.vittenet.isensmartcompanion.components.getCategoryColor
@@ -38,9 +39,9 @@ fun EventDetail(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                Toast.makeText(context, "Permission accordée !", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Permission accordée", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Permission refusée.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Permission refusée", Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -65,11 +66,13 @@ fun EventDetail(
                         isNotified = !isNotified
                         setNotificationState(context, title, isNotified)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red)),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
                         text = "Notifications",
-                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                        style = TextStyle(fontSize = 18.sp,
+                            color = colorResource(R.color.white),
+                            fontWeight = FontWeight.SemiBold)
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     Image(
@@ -87,35 +90,43 @@ fun EventDetail(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = RoundedCornerShape(30.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(colorResource(R.color.blue))
                 ) {
                     Text(
                         text = title,
                         style = TextStyle(
-                            fontSize = 25.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = colorResource(R.color.white),
-                            letterSpacing = 2.sp
+                            color = MaterialTheme.colorScheme.background,
                         ),
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(30.dp))
+                            .background(MaterialTheme.colorScheme.tertiary)
+                            .padding(16.dp)
                     )
+
                 }
 
                 Column(
                     modifier = Modifier
-                        .padding(16.dp)
                         .fillMaxWidth()
                 ) {
                     Text(
                         text = descriptionEvent,
-                        style = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 18.sp, lineHeight = 25.sp),
+                        style = TextStyle(
+                            color = colorResource(R.color.black),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 18.sp,
+                            lineHeight = 25.sp),
                         modifier = Modifier
                             .padding(18.dp)
                             .fillMaxWidth()
@@ -129,7 +140,9 @@ fun EventDetail(
                             contentDescription = "Date",
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(text = date, modifier = Modifier.padding(10.dp))
+                        Text(text = date,
+                            color = colorResource(R.color.black),
+                            modifier = Modifier.padding(10.dp))
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -140,7 +153,9 @@ fun EventDetail(
                             contentDescription = "Lieu",
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(text = location, modifier = Modifier.padding(10.dp))
+                        Text(text = location,
+                            color = colorResource(R.color.black),
+                            modifier = Modifier.padding(10.dp))
                     }
 
                     val backgroundColor = getCategoryColor(category)
@@ -156,9 +171,10 @@ fun EventDetail(
                             text = category,
                             color = colorResource(R.color.blue),
                             modifier = Modifier
+                                .padding(16.dp)
                                 .clip(RoundedCornerShape(30.dp))
                                 .background(backgroundColor)
-                                .border(width = 2.dp, color = colorResource(R.color.blue), shape = RoundedCornerShape(30.dp))
+                                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(30.dp))
                                 .padding(5.dp)
                                 .padding(horizontal = 20.dp)
                         )
