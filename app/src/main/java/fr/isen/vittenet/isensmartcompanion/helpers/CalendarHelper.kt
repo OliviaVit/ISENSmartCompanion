@@ -22,8 +22,7 @@ fun trieListeEvents(events: List<EventModel>, selectedDate: LocalDate): List<Eve
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun trieListeLessons(lessons: List<LessonModel>, selectedDate: LocalDate): List<LessonModel> {
-    val selectedDayOfWeek = selectedDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRANCE)
-
+    val selectedDayOfWeek = selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
     return lessons.filter { lesson ->
         if (lesson.isRecurrent) {
             lesson.day.split(", ").any { it.equals(selectedDayOfWeek, ignoreCase = true) }
@@ -47,7 +46,7 @@ fun parseDate(dateString: String): LocalDate {
     return try {
         LocalDate.parse(cleanDateString.trim(), formatter)
     } catch (e: Exception) {
-        throw DateTimeParseException("Erreur de format de date : $dateString", dateString, 0)
+        throw DateTimeParseException("Format error in date : $dateString", dateString, 0)
     }
 }
 
@@ -57,7 +56,7 @@ fun getEventDates(events: List<EventModel>): List<LocalDate> {
         try {
             parseDate(event.date)
         } catch (e: Exception) {
-            println("Erreur lors de la conversion de la date : ${event.date}")
+            println("Conversion error in date : ${event.date}")
             null
         }
     }.distinct()

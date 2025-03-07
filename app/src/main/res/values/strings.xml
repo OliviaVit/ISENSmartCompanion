@@ -3,9 +3,47 @@
     <string name="logo_isen">Logo ISEN</string>
     <string name="send_button">Send button</string>
     <string name="home">Home</string>
-    <string name="events">Events</string>
-    <string name="history">History</string>
+    <string name="events">EVENTS</string>
+    <string name="history">HISTORY</string>
     <string name="calendar">Calendar</string>
     <string name="title_activity_event_detail">EventDetailActivity</string>
     <string name="folder">Folder Icon</string>
+
+    <string name="add_lesson">Add a lesson</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="room">Room</string>
+    <string name="recurrent">Recurrent</string>
+    <string name="unique">Unique</string>
+    <string name="choose_days">Pick your days :</string>
+    <string name="choose_date">Pick your date :</string>
+    <string name="selected_date">Selected date :</string>
+    <string name="choose_time">What time ?</string>
+    <string name="selected_time">Selected time :</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="last_month">Last month</string>
+    <string name="next_month">Next month</string>
+
+    <string name="channel_name">Notification channel</string>
+    <string name="channel_description">Notification on events</string>
+
+    <string name="delete_lesson">Delete a lesson</string>
+    <string name="perm_granted">Permission granted</string>
+    <string name="perm_denied">Permission denied</string>
+    <string name="notifications">Notifications</string>
+    <string name="date">Date</string>
+    <string name="location">Location</string>
+    <string name="notif_enabled">Notification enabled</string>
+    <string name="notif_disabled">Notification disabled</string>
+    <string name="open_folder">Open folder icon</string>
+    <string name="delete">Delete</string>
+    <string name="delete_all_history">Delete all history</string>
+
+
+
+
+
+
+
 </resources>

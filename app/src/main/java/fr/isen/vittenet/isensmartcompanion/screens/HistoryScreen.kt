@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,8 +32,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -51,7 +48,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
+fun HistoryScreen(database: AppDatabase) {
     val coroutineScope = rememberCoroutineScope()
     var chatMessages by remember { mutableStateOf<List<ChatModel>>(emptyList()) }
     val context = LocalContext.current
@@ -75,11 +72,11 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
         ) {
             Image(
                 painter = painterResource(R.drawable.open_folder),
-                contentDescription = "Open folder",
+                contentDescription = context.getString(R.string.open_folder),
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text = "HISTORY",
+                text = context.getString(R.string.history),
                 fontWeight = FontWeight.Black,
                 fontSize = 40.sp,
                 letterSpacing = 2.sp,
@@ -100,7 +97,7 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
             ) {
                 items(chatMessages) { chat ->
                     val date = Date(chat.timestamp)
-                    val dateFormate = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()) // Définir le format
+                    val dateFormate = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
 
                     Card(
                         modifier = Modifier
@@ -130,7 +127,9 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                                     )
                                     Text(
                                         text = chat.question,
-                                        style = TextStyle(fontSize = 20.sp, fontWeight =  FontWeight.Bold, color = colorResource(R.color.white)),
+                                        style = TextStyle(fontSize = 20.sp,
+                                            fontWeight =  FontWeight.Bold,
+                                            color = colorResource(R.color.white)),
                                         modifier = Modifier
                                             .padding(horizontal = 10.dp).padding(14.dp)
                                     )
@@ -179,7 +178,7 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
                                 modifier = Modifier.align(Alignment.TopEnd),
                                 colors = IconButtonDefaults.iconButtonColors(contentColor = colorResource(R.color.white))
                             ) {
-                                Icon(Icons.Filled.Clear, contentDescription = "Supprimer")
+                                Icon(Icons.Filled.Clear, contentDescription = context.getString(R.string.delete))
                             }
 
                         }
@@ -203,13 +202,13 @@ fun HistoryScreen(innerPadding: PaddingValues, database: AppDatabase) {
 
             ) {
                 Text(
-                    text = "Delete all history",
+                    text = context.getString(R.string.delete_all_history),
                     style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Image(
                     painterResource(R.drawable.trash),
-                    contentDescription = "Vider l'historique",
+                    contentDescription = context.getString(R.string.delete_all_history),
                     modifier = Modifier.size(18.dp)
                 )
             }

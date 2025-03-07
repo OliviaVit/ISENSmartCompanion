@@ -20,7 +20,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.helpers.NotificationHelper
 import fr.isen.vittenet.isensmartcompanion.components.getCategoryColor
@@ -39,9 +38,9 @@ fun EventDetail(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                Toast.makeText(context, "Permission accordée", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.perm_granted), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Permission refusée", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.perm_denied), Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -69,7 +68,7 @@ fun EventDetail(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
-                        text = "Notifications",
+                        text = context.getString(R.string.notifications),
                         style = TextStyle(fontSize = 18.sp,
                             color = colorResource(R.color.white),
                             fontWeight = FontWeight.SemiBold)
@@ -79,7 +78,7 @@ fun EventDetail(
                         painter = painterResource(
                             if (isNotified) R.drawable.on else R.drawable.off
                         ),
-                        contentDescription = "Notification",
+                        contentDescription = context.getString(R.string.notifications),
                         modifier = Modifier.size(width = 50.dp, height = 30.dp)
                     )
                 }
@@ -137,7 +136,7 @@ fun EventDetail(
                     ) {
                         Image(
                             painterResource(R.drawable.calendar),
-                            contentDescription = "Date",
+                            contentDescription = context.getString(R.string.date),
                             modifier = Modifier.size(18.dp)
                         )
                         Text(text = date,
@@ -150,7 +149,7 @@ fun EventDetail(
                     ) {
                         Image(
                             painterResource(R.drawable.pin),
-                            contentDescription = "Lieu",
+                            contentDescription = context.getString(R.string.location),
                             modifier = Modifier.size(18.dp)
                         )
                         Text(text = location,
@@ -174,7 +173,9 @@ fun EventDetail(
                                 .padding(16.dp)
                                 .clip(RoundedCornerShape(30.dp))
                                 .background(backgroundColor)
-                                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(30.dp))
+                                .border(width = 2.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(30.dp))
                                 .padding(5.dp)
                                 .padding(horizontal = 20.dp)
                         )

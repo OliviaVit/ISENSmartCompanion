@@ -28,28 +28,15 @@ class EventDetailActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     if (event != null) {
-                        EventDetail(title= event.title, descriptionEvent = event.description, date= event.date, location = event.location, category = event.category, modifier =Modifier.padding(innerPadding) )
+                        EventDetail(
+                            title= event.title,
+                            descriptionEvent = event.description,
+                            date= event.date, location = event.location,
+                            category = event.category,
+                            modifier =Modifier.padding(innerPadding) )
                     }
                 }
             }
         }
-    }
-}
-
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    ISENSmartCompanionTheme {
-        Greeting("Android")
     }
 }

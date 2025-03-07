@@ -6,10 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -18,13 +16,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.components.AddLessonDialog
 import fr.isen.vittenet.isensmartcompanion.data.LessonManager
@@ -44,9 +40,9 @@ import java.time.YearMonth
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarScreen() {
+
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
     var lessons by remember { mutableStateOf<List<LessonModel>>(emptyList()) }
     var events by remember { mutableStateOf<List<EventModel>>(emptyList()) }
     var selectedDate = remember { mutableStateOf(LocalDate.now()) }
@@ -55,16 +51,28 @@ fun CalendarScreen() {
     val daysInMonth = remember { mutableStateOf((1..currentMonth.lengthOfMonth()).map { currentMonth.atDay(it) }) }
     val lessonManager = LessonManager(LessonDatabase.getDatabase(context).lessonDao())
 
-
+    val defaultLessons = listOf(
+        LessonModel(title = "Mathématiques", description = "Algèbre et géométrie", day = "Mon", location = "Salle 101", time = "08:00", isRecurrent = true),
+        LessonModel(title = "Physique", description = "Mécanique classique", day = "Tue", location = "Salle 202", time = "10:00", isRecurrent = true),
+        LessonModel(title = "Chimie", description = "Chimie organique", day = "Wed", location = "Salle 305", time = "14:00", isRecurrent = true),
+        LessonModel(title = "Informatique", description = "Programmation en Java", day = "Thu", location = "Salle 110", time = "16:00", isRecurrent = true),
+        LessonModel(title = "Anglais", description = "Compréhension et expression", day = "Fri", location = "Salle 205", time = "09:00", isRecurrent = true),
+        LessonModel(title = "Histoire", description = "Révolution française", day = "Mon", location = "Salle 302", time = "11:00", isRecurrent = true),
+        LessonModel(title = "Éducation Physique", description = "Sport collectif", day = "Wed", location = "Gymnase", time = "13:00", isRecurrent = true),
+        LessonModel(title = "Philosophie", description = "Cours sur Kant", day = "Fri", location = "Salle 120", time = "15:00", isRecurrent = true)
+    )
 
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
+            lessonManager.insertAll(defaultLessons)
             lessons = lessonManager.getAllLessons()
             events = EventManager.getEvents()
         }
     }
+
     val eventsDate = getEventDates(events)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,8 +101,7 @@ fun CalendarScreen() {
                         .fillMaxWidth()
                             .padding(10.dp)
                         .clip(RoundedCornerShape(15.dp))
-                        .background(colorResource(R.color.institutionnel_color))
-                            ,
+                        .background(colorResource(R.color.institutionnel_color)),
                         horizontalAlignment = Alignment.Start,
                         ){
                         Row(
@@ -130,7 +137,7 @@ fun CalendarScreen() {
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
-                                    contentDescription = "Supprimer un cours"
+                                    contentDescription = context.getString(R.string.delete_lesson)
                                 )
                             }
                         }
@@ -180,7 +187,7 @@ fun CalendarScreen() {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Ajouter un cours"
+                        contentDescription = context.getString(R.string.add_lesson)
                     )
                 }
             }

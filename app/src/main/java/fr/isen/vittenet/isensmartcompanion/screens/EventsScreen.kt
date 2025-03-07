@@ -1,11 +1,6 @@
 package fr.isen.vittenet.isensmartcompanion.screens
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,17 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import fr.isen.vittenet.isensmartcompanion.EventDetailActivity
 import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.components.getCategoryColor
@@ -61,11 +51,11 @@ fun EventsScreen() {
         ) {
             Image(
                 painter = painterResource(R.drawable.calendar),
-                contentDescription = "Calendrier",
+                contentDescription = context.getString(R.string.calendar),
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text = "EVENTS",
+                text = context.getString(R.string.events),
                 fontWeight = FontWeight.Black,
                 fontSize = 40.sp,
                 letterSpacing = 2.sp,
@@ -125,7 +115,7 @@ fun EventsScreen() {
                         painter = painterResource(
                             if (isNotified) R.drawable.notif_clicked else R.drawable.notif_unclicked
                         ),
-                        contentDescription = if (isNotified) "Notification active" else "Notification inactive",
+                        contentDescription = if (isNotified)context.getString(R.string.notif_enabled) else context.getString(R.string.notif_disabled),
                         tint = colorResource(R.color.white),
                         modifier = Modifier
                             .padding(10.dp)

@@ -1,29 +1,20 @@
 package fr.isen.vittenet.isensmartcompanion
 
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.SideEffect
 import androidx.navigation.compose.composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.compose.NavHost
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource.Companion.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
@@ -31,7 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import fr.isen.vittenet.isensmartcompanion.data.AppDatabase
 import fr.isen.vittenet.isensmartcompanion.screens.BottomNavBar
 import fr.isen.vittenet.isensmartcompanion.screens.CalendarScreen
@@ -53,9 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        //enableEdgeToEdge()
         setContent {
-
 
             val context = LocalContext.current
 
@@ -108,17 +96,16 @@ class MainActivity : ComponentActivity() {
                     Box(Modifier.padding(innerPadding)) {
                         NavHost(navController = navController, startDestination = homeTab.title) {
                             composable(homeTab.title) {
-                                MainScreen(innerPadding, db)
+                                MainScreen(db)
                             }
                             composable(eventsTab.title) {
                                 EventsScreen()
                             }
                             composable(historyTab.title) {
-                                HistoryScreen(innerPadding, db)
+                                HistoryScreen(db)
                             }
                             composable(calendarTab.title) {
                                 CalendarScreen()
-                                //CalendarModel()
                             }
                         }
 

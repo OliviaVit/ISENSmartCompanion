@@ -1,7 +1,6 @@
 package fr.isen.vittenet.isensmartcompanion.components
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -86,7 +85,8 @@ fun middleWithDays(
                         .aspectRatio(1f)
                         .clickable(
                             indication = null,
-                            interactionSource = remember { MutableInteractionSource() }                      ) { selectedDate.value = day },
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { selectedDate.value = day },
                     contentAlignment = Alignment.Center
                 ) {
                     if (isSelected) {
@@ -127,6 +127,7 @@ fun middleWithDays(
 @Composable
 fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -136,7 +137,7 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
             .padding(20.dp)
     ) {
         Text(
-            text = "Calendar",
+            text = context.getString(R.string.calendar),
             fontSize = 17.sp,
             color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Bold
@@ -177,7 +178,7 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
                         currentMonth = currentMonth.minusMonths(1)
                         daysInMonth.value = (1..currentMonth.lengthOfMonth()).map { currentMonth.atDay(it) }
                     }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Mois précédent",
+                    Icon(Icons.Filled.ArrowBack, contentDescription = context.getString(R.string.last_month),
                         tint = MaterialTheme.colorScheme.background)
                 }
                 Spacer(modifier = Modifier.size(10.dp))
@@ -190,7 +191,7 @@ fun topWithMonth(daysInMonth: MutableState<List<LocalDate>>): YearMonth? {
                         currentMonth = currentMonth.plusMonths(1)
                         daysInMonth.value = (1..currentMonth.lengthOfMonth()).map { currentMonth.atDay(it) }
                     }) {
-                    Icon(Icons.Filled.ArrowForward, contentDescription = "Mois suivant",
+                    Icon(Icons.Filled.ArrowForward, contentDescription = context.getString(R.string.next_month),
                         tint = MaterialTheme.colorScheme.background)
                 }
             }

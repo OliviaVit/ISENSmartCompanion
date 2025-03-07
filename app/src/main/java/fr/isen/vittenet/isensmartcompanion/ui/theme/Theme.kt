@@ -1,6 +1,5 @@
 package fr.isen.vittenet.isensmartcompanion.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,8 +9,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -21,17 +18,14 @@ private val DarkColorScheme = darkColorScheme(
     secondary = pastel_green,
     tertiary = pink_accent,
     onTertiary = white,
-
     background = black,
     surface = black ,
-
     secondaryContainer = pink_accent,
     onSurface = white,
     onSecondaryContainer = white,
     onSecondary = white,
     surfaceVariant = pastel_blue,
     onSurfaceVariant = white,
-
     inversePrimary = white
 
 )
@@ -43,7 +37,6 @@ private val LightColorScheme = lightColorScheme(
     tertiary = electric_blue,
     onTertiary = white,
     background = white,
-
     secondaryContainer = pastel_blue,
     surface = white,
     onSurface = electric_blue,
@@ -57,7 +50,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ISENSmartCompanionTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

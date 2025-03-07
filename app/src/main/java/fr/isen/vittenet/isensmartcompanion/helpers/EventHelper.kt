@@ -1,7 +1,6 @@
 package fr.isen.vittenet.isensmartcompanion.helpers
 
 import android.content.Context
-import android.content.SharedPreferences
 
 
     private const val PREFS_NAME = "event_prefs"

@@ -4,7 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -31,11 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import fr.isen.vittenet.isensmartcompanion.R
 import fr.isen.vittenet.isensmartcompanion.models.LessonModel
 import java.time.LocalDate
 import java.time.LocalTime
@@ -44,6 +43,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
+
     var title by remember { mutableStateOf(TextFieldValue("")) }
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var location by remember { mutableStateOf(TextFieldValue("")) }
@@ -77,13 +77,16 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Ajouter un cours") },
+        title = {context.getString(R.string.add_lesson)},
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Titre") },
+                    label = {
+                        Text(text = context.getString(R.string.title),
+                            color = if (isSystemInDarkTheme()) colorResource(R.color.white) else colorResource(R.color.black))
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -93,7 +96,10 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = {
+                        Text(text = context.getString(R.string.description),
+                            color = if (isSystemInDarkTheme()) colorResource(R.color.white) else colorResource(R.color.black))
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -103,7 +109,10 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                 OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
-                    label = { Text("Salle") },
+                    label = {
+                        Text(text = context.getString(R.string.room),
+                            color = if (isSystemInDarkTheme()) colorResource(R.color.white) else colorResource(R.color.black))
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -120,12 +129,9 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         enabled = !isRecurrent,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (!isRecurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,
-                            //contentColor = Color.White,
-                            //disabledContainerColor = Color.Gray,
-                            //disabledContentColor = Color.DarkGray
-                        )
+                            )
                     ) {
-                        Text("Récurrent")
+                        Text(context.getString(R.string.recurrent))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -133,18 +139,15 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         enabled = isRecurrent,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isRecurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,
-                            //contentColor = Color.White,
-                            //disabledContainerColor = Color.Gray,
-                            //disabledContentColor = Color.DarkGray
-                        )
+                            )
                     ) {
-                        Text("Unique")
+                        Text(context.getString(R.string.unique))
                     }
                 }
 
                 if (isRecurrent) {
                     Column {
-                        Text("Choisissez les jours :")
+                        Text( context.getString(R.string.choose_days))
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                             horizontalArrangement = Arrangement.SpaceEvenly
@@ -164,10 +167,10 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         }
                     }
                 } else {
-                    Button(onClick = { datePickerDialog.show() }) { Text("Sélectionner une date") }
+                    Button(onClick = { datePickerDialog.show() }) { Text(context.getString(R.string.choose_date)) }
                     selectedDate?.let {
                         Text(
-                            "Date sélectionnée : ${
+                            context.getString(R.string.selected_date)+" ${
                                 it.format(
                                     DateTimeFormatter.ofPattern(
                                         "dd/MM/yyyy"
@@ -178,8 +181,8 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                     }
                 }
 
-                Button(onClick = { timePickerDialog.show() }) { Text("Sélectionner une heure") }
-                time?.let { Text("Heure sélectionnée : ${it}") }
+                Button(onClick = { timePickerDialog.show() }) { Text(context.getString(R.string.choose_time)) }
+                time?.let { Text(context.getString(R.string.selected_time)+" ${it}") }
             }
         },
         confirmButton = {
@@ -188,7 +191,7 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(onClick = { onDismiss() }) {
-                    Text("Annuler")
+                    Text(context.getString(R.string.cancel))
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
@@ -207,9 +210,13 @@ fun AddLessonDialog(onDismiss: () -> Unit, onAddLesson: (LessonModel) -> Unit) {
                         )
                         onAddLesson(lesson)
                     },
-                    colors = ButtonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.background, disabledContainerColor =MaterialTheme.colorScheme.secondary, disabledContentColor = MaterialTheme.colorScheme.background ),
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor =MaterialTheme.colorScheme.secondary,
+                        disabledContentColor = MaterialTheme.colorScheme.background ),
                 ){
-                    Text("Ajouter")
+                    Text(context.getString(R.string.add))
                 }
             }
         }
